@@ -13,33 +13,45 @@
     <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
 </head>
 <body class="w3-theme-l4">
-    <div class="w3-container w3-hide-small w3-hide-medium w3-bar w3-large w3-theme-d4">
-            <a href="#" class="w3-bar-item w3-button"><i class="fa fa-bars"></i></a>
-            <span class="w3-bar-item">IGDSanglah.com</span>
-            <a href="{{.LogOut}}" class="w3-bar-item w3-button w3-right"><i class="fa fa-sign-out"></i></a>
-            <span class="w3-bar-item w3-right">Selamat datang, {{.UserName}}</span>
+    <div class="w3-sidebar w3-bar-block w3-card w3-animate-left w3-theme-d1" style="display:none" id="my-sidebar">
+        <a href="" class="w3-bar-item w3-button w3-large" onclick="closeSideBar()">Close<i class="fa fa-times" aria-hidden="true"></i></a>
+        <a href="" class="w3-bar-item w3-button">Home</a>
+        <a href="" class="w3-bar-item w3-button">BCP</a>
+        <a href="" class="w3-bar-item w3-button">IKI</a>
     </div>
-    <div class="w3-container w3-hide-large w3-bar w3-large w3-theme-d4">
-            <a href="#" class="w3-bar-item w3-button"><i class="fa fa-bars"></i></a>
-            <span class="w3-bar-item">IGDSanglah.com</span>
+    <div id="main">
+            <div class="w3-container w3-hide-small w3-hide-medium w3-bar w3-large w3-theme-d4">
+                    <a href="#" class="w3-bar-item w3-button" id="open-sidebar" onclick="openSideBar()"><i class="fa fa-bars"></i></a>
+                    <span class="w3-bar-item">IGDSanglah.com</span>
+                    <a href="{{.LogOut}}" class="w3-bar-item w3-button w3-right"><i class="fa fa-sign-out"></i></a>
+                    <span class="w3-bar-item w3-right">Selamat datang, {{.UserName}}</span>
+            </div>
+            <div class="w3-container w3-hide-large w3-bar w3-large w3-theme-d4">
+                    <a href="#" class="w3-bar-item w3-button" onclick="openMobileSideBar()"><i class="fa fa-bars"></i></a>
+                    <span class="w3-bar-item">IGDSanglah.com</span>
+            </div>
+            <div class="w3-container w3-hide-large w3-center">
+                <p>Selamat datang, {{.UserName}}</p>
+                <a href="{{.LogOut}}" class="w3-button w3-round-small w3-blue">Logout</a>
+            </div>
+            <br>
+            <div class="w3-row w3-container w3-hide-large w3-hide-medium w3-center">
+                <div class="w3-col s9">
+                    <input type="text" name="" id="get-no-cm" class="w3-input w3-border w3-round" placeholder="Ketik No.CM atau scan">
+                </div>
+                <div class="w3-col s3">
+                    <input type="button" value="Barcode" id="barcode-btn" class="w3-button w3-round" onclick="startBarcodeScan()">
+                    <!-- <a href="#" class="w3-button w3-right" id="barcode-btn"><i class="fa fa-barcode" aria-hidden="true"></i></a> -->
+                </div>
+                <div class="w3-center" id="barcode-reader">
+                        <div id="scanner-container"></div>
+                </div> 
+            </div>
+            <div class="w3-container w3-hide-small">
+                <input type="text" name="" id="" class="w3-input w3-border w3-round" placeholder="Masukkan Nomor CM...">
+            </div>
     </div>
-    <div class="w3-container w3-hide-large w3-center">
-        <p>Selamat datang, {{.UserName}}</p>
-        <a href="{{.LogOut}}" class="w3-button w3-round-small w3-blue">Logout</a>
-    </div>
-    <br>
-    <div class="w3-row w3-container w3-hide-large w3-center">
-        <div class="w3-col s9">
-            <input type="text" name="" id="get-no-cm" class="w3-input w3-border w3-round" placeholder="Ketik No.CM atau scan">
-        </div>
-        <div class="w3-col s3">
-            <input type="button" value="Barcode" id="barcode-btn" class="w3-button w3-round" onclick="startBarcodeScan()">
-            <!-- <a href="#" class="w3-button w3-right" id="barcode-btn"><i class="fa fa-barcode" aria-hidden="true"></i></a> -->
-        </div>
-        <div class="w3-center" id="barcode-reader">
-                <div id="scanner-container"></div>
-        </div> 
-    </div>
+    
 
 </body>
 </html>

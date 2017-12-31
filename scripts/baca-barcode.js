@@ -1,7 +1,6 @@
 var _scannerIsRunning = false;
 
 function startScanner() {
-    // console.log("Scanner started")
     document.getElementById("barcode-reader").style.display = "block"
     Quagga.init({
         inputStream: {
@@ -35,15 +34,8 @@ function startScanner() {
 
     Quagga.onDetected(function (result) {
         document.getElementById("barcode-reader").style.display = "none"
-        // document.getElementById("scanner-container").innerHTML = "Awesome"
         _scannerIsRunning = false;
         document.getElementById("get-no-cm").value = result.codeResult.code
-        
-        // var child = document.getElementsByTagName("video")[0]
-        // child.parentNode.removeChild(child)
-        // document.getElementsByTagName("canvas")[0].style.display = "none"
-        // document.getElementsByTagName("canvas")[1].style.display = "none"
-        // document.getElementById("scanner-container").style.display = "none"
         Quagga.stop()
     });
 }
