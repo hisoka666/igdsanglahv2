@@ -1,22 +1,40 @@
 var _scannerIsRunning = false;
+fixOrientation = function(w, h){
+    var md = new MobileDetect(window.navigator.userAgent), d = {
+        w: w,
+        h: h
+    };
+
+    if (md.phone() || md.tablet()){
+        if (window.matchMedia('(orientation:portrait)').matches){
+            if (md.userAgent() !== 'Safari'){
+                d.w = h;
+                d.h = w;
+            }
+        }
+    }
+    return d;
+}
 
 function startScanner() {
-    document.getElementById("barcode-reader").style.display = "block"
+    // var dim = fixOrientation(320, 100)
+    document.getElementById("interactive").style.display = "block"
     Quagga.init({
         inputStream: {
             name: "Live",
             type: "LiveStream",
-            target: document.querySelector('#scanner-container'),
+            // target: document.querySelector('#scanner-container'),
             constraints: {
-                width: 100,
-                height: 320,
+                // width: dim.w,
+                // height: dim.h,
                 facingMode: "environment"
             }, 
         },
         decoder: {
             readers: ["code_128_reader"]
         },
-        debug: false,
+        // debug: false,
+        multiple: false,
 
     }, function (err) {
         if (err) {
@@ -26,16 +44,21 @@ function startScanner() {
 
         console.log("Initialization finished. Ready to start");
         Quagga.start();
-        var child = document.getElementsByTagName("canvas")[0]
-        child.parentNode.removeChild(child)
+        // var child = document.getElementsByTagName("canvas")[0]
+        // child.parentNode.removeChild(child)
         // Set flag to is running
         _scannerIsRunning = true;
     });
 
     Quagga.onDetected(function (result) {
-        document.getElementById("barcode-reader").style.display = "none"
+        document.getElementById("get-no-cm-small").value = result.codeResult.code
+        var payload = {
+            "data01": result.codeResult.code
+        }
+        // alert("hasil adalah: " + result.codeResult.code)
+        sendPost("/get-info-nocm", JSON.stringify(payload), showNoCMInfo)
+        document.getElementById("interactive").style.display = "none"
         _scannerIsRunning = false;
-        document.getElementById("get-no-cm").value = result.codeResult.code
         Quagga.stop()
     });
 }

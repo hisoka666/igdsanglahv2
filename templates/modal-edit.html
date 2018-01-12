@@ -1,0 +1,51 @@
+{{if .ID}}
+<p>Nama Pasien: {{propercaps .ID.NamaPasien}}</p>
+<p>No. CM: {{.ID.NomorCM}}</p>
+{{end}}
+
+{{if .Kunjungan}}
+<input type="text" name="" id="diagnosis" class="w3-input w3-border w3-round" value="{{propercaps .Kunjungan.Diagnosis}}">
+<p></p>
+<select name="" id="ats" class="w3-select w3-round w3-border">
+    <option value="0" selected disabled>Pilih ATS...</option>
+    <option value="1">ATS 1</option>
+    <option value="2">ATS 2</option>
+    <option value="3">ATS 3</option>
+    <option value="4">ATS 4</option>
+    <option value="5">ATS 5</option>
+</select>
+<p></p>
+<select name="" id="bagian" class="w3-select w3-round w3-border">
+    <option value="0" selected disabled>Pilih Bagian...</option>
+    <option value="1">Interna</option>
+    <option value="2">Bedah</option>
+    <option value="3">Anak</option>
+    <option value="4">Obgyn</option>
+    <option value="5">Saraf</option>
+    <option value="6">Anestesi</option>
+    <option value="7">Psikiatri</option>
+    <option value="8">THT</option>
+    <option value="9">Kulit/Kelamin</option>
+    <option value="10">Jantung</option>
+    <option value="11">Umum</option>
+    <option value="12">Mata</option>
+    <option value="13">MOD</option>
+    <option value="14">Wing Amerta</option>
+</select>
+<p></p>
+<select name="" id="iki" class="w3-select w3-round w3-border">
+    <option value="0" selected disabled>Pilih IKI...</option>
+    <option value="1">IKI 1</option>
+    <option value="2">IKI 2</option>
+</select>
+<p></p>
+<select name="" id="shift-jaga" class="w3-select w3-round w3-border">
+    <option value="0" selected disabled>Pilih shift jaga...</option>
+    <option value="1">Pagi</option>
+    <option value="2">Sore</option>
+    <option value="3">Malam</option>
+</select>
+<p></p>
+<div id="tanggal-kunjungan" hidden>{{tglbcp .Kunjungan.JamDatang .Kunjungan.ShiftJaga}}</div>
+{{end}}
+

@@ -1,0 +1,132 @@
+
+<div class="w3-card w3-hide-large w3-hide-medium">
+    <div class="w3-center w3-theme-dark">
+        <span class="w3-xlarge">BCP Bulan: {{.Title}}</span></span>
+        <a href="#" class="w3-bar-item w3-button w3-right w3-theme-dark" data-bulan="{{.Kursor}}" onclick="getPDF.call(this)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+        <button class="w3-block w3-button w3-theme-dark" data-iden="tabel-iki" onclick="openContent.call(this)">Total IKI : {{.Total}}</button>
+    </div>
+    <div class="w3-row w3-hide" id="tabel-iki">
+        <table class="w3-table-all">
+            <tr class="w3-blue">
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>IKI 1</th>
+                <th>IKI 2</th>
+            </tr>
+            {{with .IKI}}
+                {{range $m, $n := .}}
+                    {{if or (ne $n.IKI1 0) (ne $n.IKI2 0)}}
+                    <tr>
+                        <td class="no-urut-tabel-iki-small"></td>
+                        <td>{{$n.Tanggal}}</td>
+                        <td>{{$n.IKI1}}</td>
+                        <td>{{$n.IKI2}}</td>
+                    </tr>
+                    {{end}}
+                {{end}}
+            {{end}}
+        </table>
+    </div>
+        <div class="w3-row">
+                <div class="w3-col s1 w3-theme-d3 w3-center">No</div>
+                <div class="w3-col s11 w3-theme-d3 w3-center">Pasien</div>
+            </div>
+            {{with .Pasien}}
+            {{range $m, $n := .}}
+            <div class="w3-row">
+                <div class="w3-col s1 w3-center" style="padding-top:9px">{{inc $m}}</div>
+                <div class="w3-col s11"><button class="w3-block w3-button w3-left-align w3-theme-d2" data-iden="content-{{inc $m}}"onclick="openContent.call(this)">({{$n.NoCM}}) {{propercaps $n.NamaPasien}}</button></div>
+            </div>
+            <div class="w3-row w3-hide" id="content-{{inc $m}}" >
+                <div class="w3-col s12 w3-padding w3-theme-l3">
+                        <p>Datang ke UGD: {{strtglhari $n.TglKunjungan}}</p>
+                        <p>Diagnosis: {{propercaps $n.Diagnosis}}</p>
+                        <p>ATS: {{$n.ATS}} IKI: {{$n.IKI}}</p>
+                        <select name="" id="modify-data-kunjungan" data-link="{{$n.LinkID}}" class="w3-select w3-round w3-border" onchange="modifyEntri.call(this)">
+                            <option value="0" selected disabled>Pilih salah satu...</option>
+                            <option value="1">Edit data</option>
+                            <option value="2">Hapus data</option>
+                            <option value="3">Ubah tanggal</option>
+                            <option value="4">Buat resep</option>
+                            <option value="5">Buat surat sakit</option>
+                            <option value="6">Detail pasien</option>
+                        </select>
+                </div>
+            </div>
+            {{end}}
+            {{end}}
+</div>
+
+<div class="w3-card w3-hide-small">
+    <div class="w3-center w3-theme-dark">
+        <span class="w3-xlarge">BCP Bulan: {{.Title}}</span>
+        <a href="#" class="w3-bar-item w3-button w3-right w3-theme-dark" data-bulan="{{.Kursor}}" onclick="getPDF.call(this)"><i class="fa fa-file-pdf-o" aria-hidden="true"> Buat PDF</i></a>
+        <button class="w3-block w3-button w3-theme-dark" data-iden="tabel-iki-large" onclick="openContent.call(this)">Total IKI : {{.Total}}</button>
+    </div>
+    <div class="w3-row w3-hide" id="tabel-iki-large">
+        <table class="w3-table-all">
+            <tr class="w3-blue">
+                <th>No</th>
+                <th>Tanggal</th>
+                <th>IKI 1</th>
+                <th>IKI 2</th>
+            </tr>
+        {{with .IKI}}
+            {{range $m, $n := .}}
+                {{if or (ne $n.IKI1 0) (ne $n.IKI2 0)}}
+                <tr>
+                    <td class="no-urut-tabel-iki-large"></td>
+                    <td>{{$n.Tanggal}}</td>
+                    <td>{{$n.IKI1}}</td>
+                    <td>{{$n.IKI2}}</td>
+                </tr>
+                {{end}}
+            {{end}}
+        {{end}}
+        </table>
+    </div>
+    <table class="w3-table-all">
+        <tr class="w3-theme-d3">
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>No. CM</th>
+            <th>Nama</th>
+            <th>Diagnosis</th>
+            <th>IKI 1</th>
+            <th>IKI 2</th>
+        </tr>
+        {{with .Pasien}}
+        {{range $m, $n := .}}
+        <tr>
+            <td>{{inc $m}}</td>
+            <td><select name="" id="" data-link="{{$n.LinkID}}" class="w3-select w3-block" onchange="modifyEntri.call(this)">
+                <option value="0" selected disabled>{{strtglhari $n.TglKunjungan}} - {{convstrjaga $n.ShiftJaga}}</option>
+                <option value="1">Edit data</option>
+                <option value="2">Hapus data</option>
+                <option value="3">Ubah tanggal</option>
+                <option value="4">Buat resep</option>
+                <option value="5">Buat surat sakit</option>
+                <option value="6">Detail pasien</option>
+            </select></td>
+            <td>{{$n.NoCM}}</td>
+            <td>{{propercaps $n.NamaPasien}}</td>
+            <td>{{propercaps $n.Diagnosis}}</td>
+            {{if eq $n.IKI "1"}}
+            <td>&#x2714;</td>
+            <td></td>
+            {{else}}
+            <td></td>
+            <td>&#x2714;</td>
+            {{end}}
+        </tr>
+        {{end}}
+        {{end}}
+    </table>
+</div>
+
+<form action="/get-bcp-pdf" method="post" id="bcp-pdf-form" hidden>
+    <input type="text" name="email" id="bcp-pdf-email" value="{{.Email}}">
+    <input type="text" name="tanggal" id="bcp-pdf-bulan" value="{{.StringTgl}}">
+    <input type="text" name="kursor" id="bcp-pdf-kursor" value="{{.Kursor}}">
+    <input type="text" name="data" id="bcp-pdf-data">
+</form>

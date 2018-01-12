@@ -1,4 +1,4 @@
-application: igdsanglah-v2
+application: igdsanglah
 service: default
 runtime: go
 api_version: go1
