@@ -31,6 +31,9 @@ function changeMain(){
     document.getElementById("server-response").innerHTML = js.modal
     document.getElementById("bcp-pdf-data").value = js.modal
     document.getElementById("modal01-tombol-tambahan").dataset.kursor = js.tambahan
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", hapusDataKunjungan)
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", sendEditData)
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", ubahDataKunjunganPasien)
     // console.log(document.getElementById("server-response").innerHTML)
 }
 
@@ -60,11 +63,8 @@ function modifyEntri(){
             // sendPost("/ubah-tanggal-kunjungan", JSON.stringify(payload), showUbahTanggalKunjungan)
             break;
         case "4":
-            modifyModal("Buat Resep", "bla,bla", "more bla, bla", "link", "Buat Resep", null)
-            // sendPost("/buat-resep")
-            break;
-        case "5":
-            modifyModal("Buat Surat Sakit", "bla,bla", "more bla, bla", "link", "Buat Surat Sakit", null)
+            // modifyModal("Buat Resep", "bla,bla", "more bla, bla", "link", "Buat Resep", null)
+            sendPost("/get-detail-pasien", JSON.stringify(payload), viewDetailPasien)
             break;
         default:
     }
@@ -112,6 +112,9 @@ function responseEditModal(){
         }
         sendPost("/get-bcp-bulan", JSON.stringify(payload), changeMain)
     }
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", hapusDataKunjungan)
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", sendEditData)
+    document.getElementById("modal01-tombol-tambahan").removeEventListener("click", ubahDataKunjunganPasien)
     document.getElementById("modal01-title-header").innerHTML = "Berhasil"
     document.getElementById("modal01-content").innerHTML = "Berhasil mengubah data kunjungan"
     document.getElementById("modal01-content-02").innerHTML = ""

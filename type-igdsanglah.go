@@ -8,6 +8,7 @@ type FrontPage struct {
 	Token    string   `json:"token"`
 	Email    string   `json:"email"`
 	Kursor   []Kursor `json:"kursor"`
+	Peran    string   `json:"peran"`
 }
 type Kursor struct {
 	Point string `json:"point"`
@@ -126,4 +127,10 @@ type KursorIGD struct {
 type KegiatanDiLuarIGD struct {
 	NamaKegiatan       string `json:"nama"`
 	TanggalPelaksanaan string `json:"tanggal"`
+}
+
+type DetailPasienPage struct {
+	Pasien    DataPasien        `json:"datapts"`
+	Kunjungan []KunjunganPasien `json:"kunjungan"`
+	LinkID    string            `json:"link"`
 }

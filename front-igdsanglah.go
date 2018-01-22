@@ -33,6 +33,10 @@ func init() {
 	http.HandleFunc("/hapus-data-kunjungan", hapusDataKunjungan)
 	http.HandleFunc("/get-data-tanggal-kunjungan-pasien", getDataTanggalKunjunganPasien)
 	http.HandleFunc("/ubah-data-tanggal-kunjungan", ubahDataTanggalKunjungan)
+	http.HandleFunc("/get-admin-page", getAdminPage)
+	http.HandleFunc("/add-staf", addStaf)
+	http.HandleFunc("/hapus-staf", hapusDataStaf)
+	http.HandleFunc("/get-detail-pasien", getDetailPasien)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
@@ -56,15 +60,35 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 	}
 	// Membuat link untuk logout.
 	logout, _ := user.LogoutURL(ctx, "/")
-
+	if u.Email == "suryasedana@gmail.com" {
+		kur, err := getKursor(ctx, u.Email)
+		if err != nil {
+			DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
+		}
+		// Menyiapkan struct untuk diexecute di template untuk Home
+		me := FrontPage{
+			LogOut:   logout,
+			UserName: "I Wayan Surya Sedana",
+			Email:    u.Email,
+			Kursor:   kur,
+			Peran:    "admin",
+		}
+		// Menyiapkan script untuk Home
+		front := GenTemplate(w, ctx, me, "index", "front-content")
+		// Response server
+		fmt.Fprint(w, front)
+		return
+	}
 	// Mengecek apakah email adalah anggota dari Staff
 	staf, err := CekStaff(ctx, u.Email)
+	// log.Infof
 	if err != nil {
-		DocumentError(w, ctx, "gagal mengambil data staf", err, 500)
+		log.Errorf(ctx, "Email tidak terdaftar, %v", err)
 		// Jika bukan, secara otomatis user akan logout
-		http.Redirect(w, r, logout, 403)
+		fmt.Fprintf(w, `<p>Maaf email anda tidak terdaftar dalam sistem. Hubungi admin. </p><a href="%s">Logout</a>`, logout)
+		// http.Redirect(w, r, logout, 403)
 	} else {
-		kur, err := getKursor(ctx, u.Email)
+		kur, err := getKursor(ctx, staf.Email)
 		if err != nil {
 			DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
 		}
@@ -74,6 +98,7 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 			UserName: staf.NamaLengkap,
 			Email:    u.Email,
 			Kursor:   kur,
+			Peran:    staf.Peran,
 		}
 		// Menyiapkan script untuk Home
 		front := GenTemplate(w, ctx, me, "index", "front-content")
@@ -175,6 +200,27 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 				return tgl.AddDate(0, 0, -1).Format("2006/01")
 			} else {
 				return tgl.Format("2006/01")
+			}
+		},
+		"umur": func(lahir time.Time) string {
+			skrng := timeNowIndonesia()
+			yr := skrng.Year() - lahir.Year()
+			mn := skrng.Month() - lahir.Month()
+			dy := skrng.Day() - lahir.Day()
+			if skrng.YearDay() < lahir.YearDay() {
+				yr--
+				mn = skrng.Month() + 12 - lahir.Month()
+			}
+			if skrng.Day() < lahir.Day() {
+				dy = lahir.AddDate(0, 0, -(lahir.Day())).Day() + lahir.Day() - skrng.Day()
+			}
+			return fmt.Sprintf("%d Tahun %d Bulan %d Hari", yr, mn, dy)
+		},
+		"jenkel": func(jk string) string {
+			if jk == "1" {
+				return "Laki-laki"
+			} else {
+				return "Perempuan"
 			}
 		},
 	}
@@ -292,7 +338,7 @@ func CekStaff(ctx context.Context, email string) (*Staff, error) {
 	// link = ""
 	if len(staf) == 0 {
 		// user = "no-access"
-		return nil, err
+		return nil, datastore.ErrNoSuchEntity
 	}
 	doc := &Staff{}
 	for _, v := range staf {
@@ -302,11 +348,16 @@ func CekStaff(ctx context.Context, email string) (*Staff, error) {
 		// link = k[0].Encode()
 		doc.NamaLengkap = v.NamaLengkap
 		doc.LinkID = k[0].Encode()
+		doc.Peran = v.Peran
 	}
 	// var kunci *datastore.Key
 	// for _, n := range k {
 	// 	kunci = n
 	// }
 	// log.Infof(ctx, "Link adalah: %v", link)
-	return doc, nil
+	if doc == nil {
+		return nil, datastore.ErrNoSuchEntity
+	} else {
+		return doc, nil
+	}
 }

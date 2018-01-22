@@ -74,3 +74,15 @@ function tambahDataKunjungan(){
     // console.log(JSON.stringify(payload))
     
 }
+
+function viewDetailPasien(){
+    var js = JSON.parse(document.getElementById("server-response").innerHTML)
+    document.getElementById("main-content").innerHTML = js.script
+    document.getElementById("detail-edit-button").addEventListener("click", viewEditInput)
+}
+
+function viewEditInput(){
+    // var nama = document.getElementById("detail-nama-pts").innerHTML
+    // var tgl
+    // document.getElementById("detail-nama-pts").innerHTML = '<input type="text"'
+}

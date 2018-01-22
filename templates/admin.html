@@ -1,0 +1,47 @@
+<div class="w3-padding">
+    <div class="w3-card-4" style="padding-bottom:10px">
+        <div class="w3-container w3-theme-l2">
+            <h3 class="w3-center">Tambah Staf UGD</h3>
+        </div>
+        <p></p>
+        <div class="w3-container w3-theme-l4">
+            <input type="email" name="" id="admin-add-email" class="w3-input w3-border w3-round" placeholder="Masukkan email">
+            <p></p>
+            <input type="text" name="" id="admin-add-nama" class="w3-input w3-border w3-round" placeholder="Masukkan nama lengkap">
+            <p></p>
+            <select name="" id="admin-add-peran" class="w3-select w3-round w3-border">
+                <option value="0" selected disabled>Pilih peran...</option>
+                <option value="staf">Staf</option>
+                <option value="supervisor">Supervisor</option>
+                <option value="3">Residen</option>
+            </select>
+            <p></p>
+            <button type="submit" id="admin-add-button" class="w3-right w3-button w3-round w3-blue" onclick="tambahStaf()">Tambah</button>
+        </div>
+        <p></p>
+        <div class="w3-container w3-red" id="admin-warning" hidden>
+            <h4>Kolom isian tidak boleh kosong</h4>
+        </div>
+    </div>
+</div>
+
+<p></p>
+<div class="w3-container" id="admin-table-staf">
+    <table class="w3-table-all">
+        <tr class="w3-theme-l1">
+            <th>No</th>
+            <th>Nama Staf</th>
+            <th>Peran</th>
+            <th></th>
+        </tr>
+        
+        {{range $m, $n := .}}
+        <tr>
+            <td>{{inc $m}}</td>
+            <td>{{propercaps $n.NamaLengkap}}</td>
+            <td>{{propercaps $n.Peran}}</td>
+            <td><button type="submit" id="admin-hapus-staf" data-link="{{$n.LinkID}}" class="w3-button w3-round w3-blue" onclick="hapusStaf.call(this)">Hapus</button></td>
+        </tr>
+        {{end}}
+    </table>
+</div>

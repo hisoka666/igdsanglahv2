@@ -15,3 +15,10 @@ indexes:
   - name: Dokter
   - name: JamDatang
     direction: desc
+
+- kind: KunjunganPasien
+  ancestor: yes
+  properties:
+  - name: Hide
+  - name: JamDatang
+    direction: desc

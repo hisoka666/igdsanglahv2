@@ -29,25 +29,27 @@
 {{end}}
 
 <div class="w3-row w3-container w3-hide-large w3-hide-medium w3-center">
-    <div class="w3-col s9">
-        <input type="text" name="" id="get-no-cm-small" class="w3-input w3-border w3-round" placeholder="Ketik No.CM atau scan" onkeyup="sendNoCM()">
+        <div class="w3-col s9">
+            <input type="text" name="" id="get-no-cm-small" class="w3-input w3-border w3-round" placeholder="Ketik No.CM atau scan" onkeyup="sendNoCM()">
+        </div>
+        <div class="w3-col s3">
+            <input type="button" value="Barcode" id="barcode-btn" class="w3-button w3-round" onclick="startBarcodeScan()">
+            <!-- <a href="#" class="w3-button w3-right" id="barcode-btn"><i class="fa fa-barcode" aria-hidden="true"></i></a> -->
+        </div>
+        <div class="w3-center viewport" id="interactive">
+            <video src="" autoplay="true" preload="auto" muted="true" playsinline="true"></video>
+            <canvas #canvas class="drawingBuffer"></canvas>
+            <!-- <div id="scanner-container"></div> -->
+        </div> 
     </div>
-    <div class="w3-col s3">
-        <input type="button" value="Barcode" id="barcode-btn" class="w3-button w3-round" onclick="startBarcodeScan()">
-        <!-- <a href="#" class="w3-button w3-right" id="barcode-btn"><i class="fa fa-barcode" aria-hidden="true"></i></a> -->
+    <div class="w3-container w3-hide-small">
+        <input type="text" name="" id="get-no-cm-large" class="w3-input w3-border w3-round" placeholder="Masukkan Nomor CM..." onkeyup="sendNoCM()">
     </div>
-    <div class="w3-center" id="barcode-reader">
-        <div id="scanner-container"></div>
-    </div> 
-</div>
-<div class="w3-container w3-hide-small">
-    <input type="text" name="" id="get-no-cm-large" class="w3-input w3-border w3-round" placeholder="Masukkan Nomor CM..." onkeyup="sendNoCM()">
-</div>
-<div class="w3-container w3-padding">
-    <div class="w3-panel w3-orange w3-round" id="warning-no-cm" hidden>
-        <p id="warning-msg" class="w3-left">Nomor CM kurang</p>
-        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-right w3-orange">&times;</span>
+    <div class="w3-container w3-padding">
+        <div class="w3-panel w3-orange w3-round" id="warning-no-cm" hidden>
+            <p id="warning-msg" class="w3-left">Nomor CM kurang</p>
+            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-right w3-orange">&times;</span>
+        </div>
     </div>
-</div>
-<div class="w3-container" id="form-input-pasien">
-</div>
+    <div class="w3-container" id="form-input-pasien">
+    </div>

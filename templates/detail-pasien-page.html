@@ -1,0 +1,81 @@
+<div class="w3-padding">
+    <div class="w3-card-4" style="padding-bottom:10px">
+        <div class="w3-container w3-theme-l2">
+            <h3 class="w3-center">Detail Pasien</h3>
+        </div>
+        <p></p>
+        <div class="w3-container w3-theme-l4">
+            <label for=""><strong>Nama Pasien:</strong></label>
+            <div id="detail-nama-pts">{{propercaps .Pasien.NamaPasien}}</div>
+            
+            <label for=""><strong>Tanggal Lahir (Umur):</strong></label>
+            <div id="detail-tanggal-lahir">{{strtglhari .Pasien.TglLahir}} ({{umur .Pasien.TglLahir}})</div>
+            
+            <label for=""><strong>Alamat:</strong></label>
+            <div id="detail-alamat">{{propercaps .Pasien.Alamat}}</div>
+            
+            <label for=""><strong>Jenis Kelamin:</strong></label>
+            <div id="detail-jenis-kelamin">{{jenkel .Pasien.JenKel}}</div>
+            
+            <button type="submit" class="w3-button w3-round w3-blue w3-right" data-link="{{.LinkID}}" id="detail-edit-button">Ubah</button>
+        </div>        
+    </div>
+</div>
+
+<div class="w3-container w3-hide-small">
+    <table class="w3-table-all">
+        <tr class="w3-theme-l2">
+            <th>No</th>
+            <th>Tanggal (Shift)</th>
+            <th>Diagnosis</th>
+            <th>IKI 1</th>
+            <th>IKI 2</th>
+        </tr>
+        {{range $m, $n := .Kunjungan}}
+        <tr>
+            <td>{{inc $m}}</td>
+            <td><select name="" id="" data-link="{{$n.LinkID}}" class="w3-select w3-block" onchange="modifyEntri.call(this)">
+                    <option value="0" selected disabled>{{strtglhari $n.JamDatangRiil}} {{jam $n.JamDatangRiil}} ({{convstrjaga $n.ShiftJaga}})</option>
+                    <option value="1">Edit data</option>
+                    <option value="2">Hapus data</option>
+                    <option value="3">Ubah tanggal</option>
+                    <option value="4">Detail pasien</option>
+                </select></td>
+            <td>{{propercaps $n.Diagnosis}}</td>
+            {{if eq $n.GolIKI "1"}}
+            <td>&#x2714;</td>
+            <td></td>
+            {{else}}
+            <td></td>
+            <td>&#x2714;</td>
+            {{end}}
+        </tr>
+        {{end}}
+    </table>
+</div>
+
+<div class="w3-container w3-hide-large w3-hide-medium">
+        <div class="w3-row">
+                <div class="w3-col s1 w3-theme-d3 w3-center"><h4>No</h4></div>
+                <div class="w3-col s11 w3-theme-d3 w3-center"><h4>Tanggal Kunjungan</h4></div>
+            </div>
+            {{range $m, $n := .Kunjungan}}
+            <div class="w3-row">
+                <div class="w3-col s1 w3-center" style="padding-top:9px">{{inc $m}}</div>
+                <div class="w3-col s11"><button class="w3-block w3-button w3-left-align w3-theme-d2" data-iden="content-{{inc $m}}"onclick="openContent.call(this)">{{strtglhari $n.JamDatangRiil}} {{jam $n.JamDatangRiil}} ({{convstrjaga $n.ShiftJaga}})</button></div>
+            </div>
+            <div class="w3-row w3-hide" id="content-{{inc $m}}" >
+                <div class="w3-col s12 w3-padding w3-theme-l3">
+                        <p>Diagnosis: {{propercaps $n.Diagnosis}}</p>
+                        <p>ATS: {{$n.ATS}} IKI: {{$n.GolIKI}}</p>
+                        <select name="" id="modify-data-kunjungan" data-link="{{$n.LinkID}}" class="w3-select w3-round w3-border" onchange="modifyEntri.call(this)">
+                            <option value="0" selected disabled>Pilih salah satu...</option>
+                            <option value="1">Edit data</option>
+                            <option value="2">Hapus data</option>
+                            <option value="3">Ubah tanggal</option>
+                            <option value="4">Detail pasien</option>
+                        </select>
+                </div>
+            </div>
+            {{end}}
+</div>

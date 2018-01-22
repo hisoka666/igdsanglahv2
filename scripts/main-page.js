@@ -57,7 +57,7 @@ function sendPost(url, content, somefunc){
             document.getElementById("loading-animation").style.display="none"
             somefunc()
         } else if (this.readyState == 4 && this.status != 200) {
-            console.log(this.responseText)
+            // console.log(this.responseText)
             document.getElementById("loading-animation").style.display="none"
             document.getElementById("modal01-title-header").innerHTML = "Peringatan!"
             document.getElementById("modal01-content").innerHTML = this.responseText

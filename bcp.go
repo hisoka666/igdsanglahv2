@@ -52,31 +52,12 @@ func getBCPBulan(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
-	// tgl, err := time.ParseInLocation("2006/01/02", js.Data3+"/01", ZonaIndo())
-	// if err != nil {
-	// 	DocumentError(w, ctx, "Gagal memparse tanggal", err, 500)
-	// 	return
-	// }
 	data, err := getTableBCPbyCursor(ctx, js.Data1, js.Data2, js.Data3)
 	if err != nil {
 		DocumentError(w, ctx, "mengambil data table bcp", err, 500)
 		return
 	}
-	// list, err := getListPasien(ctx, js.Data1, js.Data2, js.Data3)
-	// if err != nil {
-	// 	DocumentError(w, ctx, "Gagal mengambil list pasien", err, 500)
-	// 	return
-	// }
-	// a, b := CountIKI(ctx, list, tgl)
-	// data := &TableBCP{
-	// 	Pasien:    list,
-	// 	Title:     tgl.Format("Jan, 2006"),
-	// 	StringTgl: tgl.Format("2006/01"),
-	// 	Total:     a,
-	// 	Kursor:    js.Data1,
-	// 	Email:     js.Data2,
-	// 	IKI:       b,
-	// }
+
 	jss, _ := json.Marshal(data)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, data, "bcp-content"), string(jss), js.Data1)
 }
@@ -91,21 +72,7 @@ func getBCPBulanIni(w http.ResponseWriter, r *http.Request) {
 		DocumentError(w, ctx, "mengambil data tabel bcp", err, 500)
 		return
 	}
-	// list, err := getListPasien(ctx, "", email, "")
-	// if err != nil {
-	// 	DocumentError(w, ctx, "Gagal mengambil list pasien", err, 500)
-	// 	return
-	// }
-	// a, b := CountIKI(ctx, list, timeNowIndonesia())
-	// data := &TableBCP{
-	// 	Pasien:    list,
-	// 	Title:     timeNowIndonesia().Format("Jan, 2006"),
-	// 	StringTgl: timeNowIndonesia().Format("2006/01"),
-	// 	Total:     a,
-	// 	Kursor:    "",
-	// 	Email:     email,
-	// 	IKI:       b,
-	// }
+
 	jss, _ := json.Marshal(tab)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, tab, "bcp-content"), string(jss), "")
 }
@@ -203,10 +170,12 @@ func iterateList(c context.Context, q *datastore.Query, tgl time.Time) ([]Kunjun
 		if d.Hide == true {
 			continue
 		}
-		if d.JamDatang.In(ZonaIndo()).Before(tgl) {
+		jam := d.JamDatang.In(ZonaIndo())
+		if jam.Before(tgl) {
 			break
 		}
-		d.JamDatang = d.JamDatang.In(ZonaIndo())
+		// d.JamDatang = d.JamDatang.In(ZonaIndo())
+		// d.JamDatang = jam
 		d.LinkID = k.Encode()
 		m = append(m, *d)
 	}
@@ -272,52 +241,7 @@ func editDataKunjungan(w http.ResponseWriter, r *http.Request) {
 		DocumentError(w, ctx, "menyimpan data", err, 500)
 		return
 	}
-	// m, err := getListPasien(ctx, kun.Dokter, kunlama.Dokter, TanggalBCP(kunlama.JamDatang, kun.ShiftJaga))
-	// if err != nil {
-	// 	DocumentError(w, ctx, "mengambil list pasien", err, 500)
-	// 	return
-	// }
 	tab, err := getTableBCPbyCursor(ctx, kun.Dokter, kunlama.Dokter, TanggalBCP(kunlama.JamDatang, kun.ShiftJaga))
-	// tab := &TableBCP{}
-	// if kun.Dokter == "" {
-	// 	a, b := CountIKI(ctx, m, timeNowIndonesia())
-	// 	data := &TableBCP{
-	// 		Pasien:    m,
-	// 		Title:     timeNowIndonesia().Format("Jan, 2006"),
-	// 		StringTgl: timeNowIndonesia().Format("2006/01"),
-	// 		Total:     a,
-	// 		Kursor:    "",
-	// 		Email:     kunlama.Dokter,
-	// 		IKI:       b,
-	// 	}
-	// 	tab = data
-	// } else {
-	// 	tglbcp := TanggalBCP(kunlama.JamDatang, kun.ShiftJaga)
-	// 	tgl, err := time.ParseInLocation("2006/01/02", tglbcp+"/01", ZonaIndo())
-	// 	if err != nil {
-	// 		DocumentError(w, ctx, "Gagal memparse tanggal", err, 500)
-	// 		return
-	// 	}
-	// 	list, err := getListPasien(ctx, kun.Dokter, kunlama.Dokter, kun.Dokter)
-	// 	if err != nil {
-	// 		DocumentError(w, ctx, "Gagal mengambil list pasien", err, 500)
-	// 		return
-	// 	}
-	// 	a, b := CountIKI(ctx, list, tgl)
-	// 	data := &TableBCP{
-	// 		Pasien:    list,
-	// 		Title:     tgl.Format("Jan, 2006"),
-	// 		StringTgl: tgl.Format("2006/01"),
-	// 		Total:     a,
-	// 		Kursor:    kun.Dokter,
-	// 		Email:     kunlama.Dokter,
-	// 		IKI:       b,
-	// 	}
-	// 	tab = data
-	// }
-
-	// jss, _ := json.Marshal(data)
-	// SendBackSuccess(w, nil, GenTemplate(w, ctx, data, "bcp-content"), string(jss), "")
 	jss, _ := json.Marshal(tab)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, tab, "bcp-content"), string(jss), kun.Dokter)
 }
@@ -390,6 +314,8 @@ func getTableBCPbyCursor(c context.Context, kur, email, tgl string) (*TableBCP, 
 		}
 		tab = data
 	}
+	// log.Infof(c, "IKI adalah: %v", tab.IKI)
+	// log.Infof(c, "List adalah: %v", tab.Pasien)
 	return tab, nil
 }
 

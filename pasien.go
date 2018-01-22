@@ -7,6 +7,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/search"
 )
 
@@ -146,4 +147,44 @@ func tambahDataKunjungan(w http.ResponseWriter, r *http.Request) {
 			SendBackSuccess(w, nil, "", "Berhasil menyimpan data kunjungan", "")
 		}
 	}
+}
+
+func getDetailPasien(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	js := &CatchDataJson{}
+	json.NewDecoder(r.Body).Decode(js)
+	defer r.Body.Close()
+	k, err := datastore.DecodeKey(js.Data1)
+	if err != nil {
+		DocumentError(w, ctx, "mendecode key", err, 500)
+		return
+	}
+	q := datastore.NewQuery("KunjunganPasien").Ancestor(k.Parent()).Order("-JamDatang").Filter("Hide=", false)
+	j := []KunjunganPasien{}
+	m, err := q.GetAll(ctx, &j)
+	if err != nil {
+		DocumentError(w, ctx, "mengambil list kunjungan", err, 500)
+		return
+	}
+	list := []KunjunganPasien{}
+	for a, b := range j {
+		if b.Dokter == "sunia.raharja@gmail.com" {
+			continue
+		}
+		b.LinkID = m[a].Encode()
+		list = append(list, b)
+	}
+	dat := &DataPasien{}
+	err = datastore.Get(ctx, k.Parent(), dat)
+	if err != nil {
+		DocumentError(w, ctx, "mengambil data pasien", err, 500)
+		return
+	}
+	pts := DetailPasienPage{
+		Pasien:    *dat,
+		Kunjungan: list,
+		LinkID:    k.Parent().Encode(),
+	}
+	log.Infof(ctx, "List kunjungan adalah : %v", pts.Kunjungan)
+	SendBackSuccess(w, nil, GenTemplate(w, ctx, pts, "detail-pasien-page"), "", "")
 }

@@ -27,9 +27,9 @@
             {{end}}
         </table>
     </div>
-        <div class="w3-row">
-                <div class="w3-col s1 w3-theme-d3 w3-center">No</div>
-                <div class="w3-col s11 w3-theme-d3 w3-center">Pasien</div>
+            <div class="w3-row">
+                <div class="w3-col s1 w3-theme-d3 w3-center"><h4>No</h4></div>
+                <div class="w3-col s11 w3-theme-d3 w3-center"><h4>Pasien</h4></div>
             </div>
             {{with .Pasien}}
             {{range $m, $n := .}}
@@ -47,9 +47,7 @@
                             <option value="1">Edit data</option>
                             <option value="2">Hapus data</option>
                             <option value="3">Ubah tanggal</option>
-                            <option value="4">Buat resep</option>
-                            <option value="5">Buat surat sakit</option>
-                            <option value="6">Detail pasien</option>
+                            <option value="4">Detail pasien</option>
                         </select>
                 </div>
             </div>
@@ -104,9 +102,7 @@
                 <option value="1">Edit data</option>
                 <option value="2">Hapus data</option>
                 <option value="3">Ubah tanggal</option>
-                <option value="4">Buat resep</option>
-                <option value="5">Buat surat sakit</option>
-                <option value="6">Detail pasien</option>
+                <option value="4">Detail pasien</option>
             </select></td>
             <td>{{$n.NoCM}}</td>
             <td>{{propercaps $n.NamaPasien}}</td>
