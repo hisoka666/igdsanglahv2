@@ -7,7 +7,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/search"
 )
 
@@ -185,6 +184,35 @@ func getDetailPasien(w http.ResponseWriter, r *http.Request) {
 		Kunjungan: list,
 		LinkID:    k.Parent().Encode(),
 	}
-	log.Infof(ctx, "List kunjungan adalah : %v", pts.Kunjungan)
+	// log.Infof(ctx, "List kunjungan adalah : %v", pts.Kunjungan)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, pts, "detail-pasien-page"), "", "")
+}
+
+func ubahDetailPasien(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	js := &CatchDataJson{}
+	json.NewDecoder(r.Body).Decode(js)
+	defer r.Body.Close()
+	k, err := datastore.DecodeKey(js.Data5)
+	if err != nil {
+		DocumentError(w, ctx, "mendecode key", err, 500)
+		return
+	}
+	det := &DataPasien{}
+	err = datastore.Get(ctx, k, det)
+	if err != nil {
+		DocumentError(w, ctx, "mengambil data pasien", err, 500)
+		return
+	}
+	det.NamaPasien = js.Data1
+	det.Alamat = js.Data3
+	det.JenKel = js.Data4
+	// tgl, err := time.ParseInLocation("")
+	det.TglLahir = ChangeStringtoTime(js.Data2)
+	_, err = datastore.Put(ctx, k, det)
+	if err != nil {
+		DocumentError(w, ctx, "menyimpan data", err, 500)
+		return
+	}
+	SendBackSuccess(w, nil, "", "Berhasil mengubah data", "")
 }

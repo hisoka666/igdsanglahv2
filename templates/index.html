@@ -14,6 +14,7 @@
     <script src="scripts/pasien.js"></script>
     <script src="scripts/bcp.js"></script>
     <script src="scripts/admin.js"></script>
+    <script src="scripts/dokter.js"></script>
     <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js"></script>
     <link rel="stylesheet" href="stylesheets/main-page-style.css">
 </head>
@@ -40,14 +41,14 @@
                     <a href="#" class="w3-bar-item w3-button" id="open-sidebar" onclick="openSideBar()"><i class="fa fa-bars"></i></a>
                     <span class="w3-bar-item">IGDSanglah.com</span>
                     <a href="{{.LogOut}}" class="w3-bar-item w3-button w3-right"><i class="fa fa-sign-out"> Logout</i></a>
-                    <span class="w3-bar-item w3-right">Selamat datang, {{.UserName}}</span>
+                    <span class="w3-bar-item w3-right">Selamat datang, <a href="#" id="nama-dokter" onclick="openDocProfile()">{{.UserName}}</a></span>
             </div>
             <div class="w3-container w3-hide-large w3-bar w3-large w3-theme-d4">
                     <a href="#" class="w3-bar-item w3-button" onclick="openMobileSideBar()"><i class="fa fa-bars"></i></a>
                     <span class="w3-bar-item">IGDSanglah.com</span>
             </div>
             <div class="w3-container w3-hide-large w3-center">
-                <p>Selamat datang, {{.UserName}}</p>
+                <p>Selamat datang, <a href="#" id="nama-dokter" onclick="openDocProfile()">{{.UserName}}</a></p>
                 <a href="{{.LogOut}}" class="w3-button w3-round-small w3-blue">Logout</a>
             </div>
             <br>

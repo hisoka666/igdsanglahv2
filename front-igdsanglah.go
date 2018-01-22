@@ -37,6 +37,9 @@ func init() {
 	http.HandleFunc("/add-staf", addStaf)
 	http.HandleFunc("/hapus-staf", hapusDataStaf)
 	http.HandleFunc("/get-detail-pasien", getDetailPasien)
+	http.HandleFunc("/ubah-detail-pasien", ubahDetailPasien)
+	http.HandleFunc("/get-doc-profile", getDocProfile)
+	http.HandleFunc("/ubah-detail-dokter", ubahDetailDokter)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
@@ -222,6 +225,9 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 			} else {
 				return "Perempuan"
 			}
+		},
+		"htmltgl": func(tgl time.Time) string {
+			return tgl.Format("2006-01-02")
 		},
 	}
 	// Membuat template baru

@@ -9,19 +9,19 @@
             <div id="detail-nama-pts">{{propercaps .Pasien.NamaPasien}}</div>
             
             <label for=""><strong>Tanggal Lahir (Umur):</strong></label>
-            <div id="detail-tanggal-lahir">{{strtglhari .Pasien.TglLahir}} ({{umur .Pasien.TglLahir}})</div>
+            <div id="detail-tanggal-lahir">{{strtglhari .Pasien.TglLahir}} ({{umur .Pasien.TglLahir}}) <span id="tgl-lahir-hidden" hidden>{{htmltgl .Pasien.TglLahir}}</span></div>
             
             <label for=""><strong>Alamat:</strong></label>
             <div id="detail-alamat">{{propercaps .Pasien.Alamat}}</div>
             
             <label for=""><strong>Jenis Kelamin:</strong></label>
             <div id="detail-jenis-kelamin">{{jenkel .Pasien.JenKel}}</div>
-            
+            <span id="jenkel-hidden" hidden>{{.Pasien.JenKel}}</span>
+            <p></p>
             <button type="submit" class="w3-button w3-round w3-blue w3-right" data-link="{{.LinkID}}" id="detail-edit-button">Ubah</button>
         </div>        
     </div>
 </div>
-
 <div class="w3-container w3-hide-small">
     <table class="w3-table-all">
         <tr class="w3-theme-l2">
@@ -68,7 +68,7 @@
                 <div class="w3-col s12 w3-padding w3-theme-l3">
                         <p>Diagnosis: {{propercaps $n.Diagnosis}}</p>
                         <p>ATS: {{$n.ATS}} IKI: {{$n.GolIKI}}</p>
-                        <select name="" id="modify-data-kunjungan" data-link="{{$n.LinkID}}" class="w3-select w3-round w3-border" onchange="modifyEntri.call(this)">
+                        <select name="" id="" data-link="{{$n.LinkID}}" class="w3-select w3-round w3-border link-kunjungan" onchange="modifyEntri.call(this)">
                             <option value="0" selected disabled>Pilih salah satu...</option>
                             <option value="1">Edit data</option>
                             <option value="2">Hapus data</option>
