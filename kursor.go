@@ -14,14 +14,15 @@ func createKursor(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 	var staf []Staff
 	q := datastore.NewQuery("Staff")
-	m, err := q.GetAll(ctx, &staf)
+	_, err := q.GetAll(ctx, &staf)
 	if err != nil {
 		DocumentError(w, ctx, "mengambil staf", err, 500)
 		return
 	}
 
-	for k, v := range staf {
-		CreateEndKursor(ctx, m[k], v.Email)
+	for _, v := range staf {
+		par := datastore.NewKey(ctx, "Dokter", v.Email, 0, datastore.NewKey(ctx, "IGD", "fasttrack", 0, nil))
+		CreateEndKursor(ctx, par, v.Email)
 	}
 	CreateKursorIGD(ctx)
 }
@@ -32,7 +33,7 @@ func CreateKursorIGD(c context.Context) {
 	kur := KursorIGD{}
 	kun := KunjunganPasien{}
 	hariini := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
-	tgl := hariini.Format("2006/01")
+	tgl := hariini.AddDate(0, -1, 0).Format("2006/01")
 	k := datastore.NewKey(c, "KursorIGD", tgl, 0, datastore.NewKey(c, "IGD", "fasttrack", 0, nil))
 	for {
 		_, err := t.Next(&kun)
@@ -68,6 +69,12 @@ func getKursor(c context.Context, email string) ([]Kursor, error) {
 	for k, v := range n {
 		kur[k].Link = v.StringID()
 	}
+	if timeNowIndonesia().Day() == 1 && timeNowIndonesia().Hour() < 8 {
+		ku := Kursor{
+			Link: timeNowIndonesia().AddDate(0, -1, 0).Format("2006/01"),
+		}
+		kur = append(kur, ku)
+	}
 	for i, j := 0, len(kur)-1; i < j; i, j = i+1, j-1 {
 		kur[i], kur[j] = kur[j], kur[i]
 	}
@@ -83,7 +90,8 @@ func CreateEndKursor(c context.Context, par *datastore.Key, email string) {
 	// days := time.Date(yr,time.Month(mo),0,0,0,0,0,zone).Day()
 	// mon := time.Date()
 	tgl := timeNowIndonesia().AddDate(0, -1, 0).Format("2006/01")
-	tglend, err := time.ParseInLocation("2006/01/02 15:04", tgl+"/02 07:30", ZonaIndo())
+	tglnow := timeNowIndonesia().Format("2006/01")
+	tglend, err := time.ParseInLocation("2006/01/02 15:04", tglnow+"/01 07:30", ZonaIndo())
 	if err != nil {
 		log.Errorf(c, "Gagal memparse tglend : %v", err)
 		return
@@ -103,7 +111,9 @@ func CreateEndKursor(c context.Context, par *datastore.Key, email string) {
 		if err != nil {
 			log.Errorf(c, "Gagal membaca data %v", err)
 		}
-		if IsThisCursor(kun.JamDatang, tglend, kun.ShiftJaga) {
+		log.Infof(c, "jam Dtang adalah: %v shift jaga adalah: %v", kun.JamDatang.In(ZonaIndo()), kun.ShiftJaga)
+		log.Infof(c, "Tgl end adalah: %v", tglend)
+		if IsThisCursor(kun.JamDatang.In(ZonaIndo()), tglend, kun.ShiftJaga) {
 			cursor, _ := t.Cursor()
 			kur.Point = cursor.String()
 			if _, err := datastore.Put(c, k, &kur); err != nil {

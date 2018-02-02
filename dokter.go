@@ -44,6 +44,7 @@ func getDocProfile(w http.ResponseWriter, r *http.Request) {
 	} else {
 		det[0].LinkID = ke[0].Encode()
 		det[0].Umur = k[0].Encode()
+		det[0].TanggalLahir = det[0].TanggalLahir.In(ZonaIndo())
 	}
 	// log.Infof(ctx, "det adalah: %v", det[0].LinkID)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, det[0], "doc-profile"), "", "")

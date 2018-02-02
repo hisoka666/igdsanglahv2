@@ -1,0 +1,3 @@
+{{range $k, $v := .}}
+<a href="" data-link="{{$v.Link}}" class="w3-bar-item w3-button" onclick="viewSearch.call(this)">$v.MerkDagang <i>({{$v.Kandungan}})</i></a>
+{{end}}

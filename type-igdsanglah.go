@@ -134,3 +134,9 @@ type DetailPasienPage struct {
 	Kunjungan []KunjunganPasien `json:"kunjungan"`
 	LinkID    string            `json:"link"`
 }
+
+type IndexObat struct {
+	MerkDagang string `json:"merk"`
+	Kandungan  string `json:"kandungan"`
+	Link       string `json:"link"`
+}

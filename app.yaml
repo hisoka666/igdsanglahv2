@@ -13,6 +13,8 @@ handlers:
 - url: /templates
   static_dir: templates
   application_readable: true
+- url: /createkursor
+  script: _go_app
 - url: /.*
   login: required
   script: _go_app

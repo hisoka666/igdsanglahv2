@@ -273,6 +273,9 @@ func CreateBCPPDF(c context.Context, pts []Pasien, iki []IKI, email string) (*by
 		}
 		// 11/02/1987
 		tang := v.TglKunjungan.Format("02-01-2006")
+		if v.TglKunjungan.Hour() > 0 && v.TglKunjungan.Hour() < 12 && v.ShiftJaga == "3" {
+			tang = v.TglKunjungan.AddDate(0, 0, -1).Format("02-01-2006")
+		}
 		num := strconv.Itoa(k + 1)
 		nocm := v.NoCM
 		nam := ProperCapital(v.NamaPasien)

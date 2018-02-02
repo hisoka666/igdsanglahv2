@@ -40,6 +40,8 @@ func init() {
 	http.HandleFunc("/ubah-detail-pasien", ubahDetailPasien)
 	http.HandleFunc("/get-doc-profile", getDocProfile)
 	http.HandleFunc("/ubah-detail-dokter", ubahDetailDokter)
+	http.HandleFunc("/get-obat-page", getObatPage)
+	http.HandleFunc("/cari-obat", cariObat)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama

@@ -17,6 +17,12 @@ indexes:
     direction: desc
 
 - kind: KunjunganPasien
+  properties:
+  - name: Hide
+  - name: JamDatang
+    direction: desc
+
+- kind: KunjunganPasien
   ancestor: yes
   properties:
   - name: Hide

@@ -95,6 +95,13 @@ func getListPasien(c context.Context, kur, email, tgl string) ([]Pasien, error) 
 			return nil, err
 		}
 		list = append(list, m...)
+	} else if tgl != "" && kur == "" {
+		now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
+		m, err := iterateList(c, q, now)
+		if err != nil {
+			return nil, err
+		}
+		list = append(list, m...)
 	} else {
 		now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
 		m, err := iterateList(c, q, now)
@@ -117,6 +124,7 @@ func CountIKI(g context.Context, n []Pasien, tgl time.Time) (string, []IKI) {
 	for i := 0; i < jmlhari; i++ {
 		timeToCount := wkt.AddDate(0, 0, +i)
 		timeAfter := timeToCount.AddDate(0, 0, 1)
+		// timeAfter := time.Date(timeToCount.Year(), timeToCount.Month(), (timeToCount.Day() + 1), 12, 0, 0, 0, ZonaIndo())
 		var a int
 		b := &a
 		var c int
@@ -198,7 +206,7 @@ func convertToListPasien(c context.Context, kun []KunjunganPasien) ([]Pasien, er
 
 		m := Pasien{
 			NamaPasien:   n.NamaPasien,
-			TglKunjungan: v.JamDatang,
+			TglKunjungan: v.JamDatang.In(ZonaIndo()),
 			ShiftJaga:    v.ShiftJaga,
 			ATS:          v.ATS,
 			Dept:         v.Bagian,
@@ -208,6 +216,9 @@ func convertToListPasien(c context.Context, kun []KunjunganPasien) ([]Pasien, er
 			LinkID:       v.LinkID,
 			TglAsli:      v.JamDatangRiil,
 			TglLahir:     n.TglLahir,
+		}
+		if v.ShiftJaga == "3" && v.JamDatang.Hour() > 5 && v.JamDatang.Hour() < 12 {
+			m.TglKunjungan = time.Date(v.JamDatang.Year(), v.JamDatang.Month(), v.JamDatang.Day(), 6, v.JamDatang.Minute(), v.JamDatang.Second(), v.JamDatang.Nanosecond(), ZonaIndo())
 		}
 		list = append(list, m)
 	}
@@ -337,7 +348,8 @@ func ubahDataTanggalKunjungan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	tglbaru := ChangeStringtoTime(js.Data2)
-	kun.JamDatang = time.Date(tglbaru.Year(), tglbaru.Month(), tglbaru.Day(), kun.JamDatangRiil.Hour(), kun.JamDatangRiil.Minute(), kun.JamDatangRiil.Second(), kun.JamDatangRiil.Nanosecond(), ZonaIndo())
+	jamubah := kun.JamDatangRiil.In(ZonaIndo())
+	kun.JamDatang = time.Date(tglbaru.Year(), tglbaru.Month(), tglbaru.Day(), jamubah.Hour(), jamubah.Minute(), jamubah.Second(), jamubah.Nanosecond(), ZonaIndo())
 	_, err = datastore.Put(ctx, k, kun)
 	if err != nil {
 		DocumentError(w, ctx, "gagal menyimpan data", err, 500)
