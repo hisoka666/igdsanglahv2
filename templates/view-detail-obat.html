@@ -1,0 +1,11 @@
+
+<div style="display:none">
+    <p>Nama Dagang : {{.MerkDagang}}</p>
+    <p>Kandungan: {{.Kandungan}}</p>
+    <p>Sediaan: {{.SediaanObat}}, 
+    {{if .Takaran}}
+    Takaran standar (cth, ml) : {{.Takaran}}, 
+    {{end}}
+    Pertakaran : {{.JmlPerTakaran}}</p>
+    <p>Saran Pemberian: <span id="obat-saran-pemberian"></span></p>
+</div>

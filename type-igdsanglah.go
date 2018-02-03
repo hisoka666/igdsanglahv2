@@ -140,3 +140,16 @@ type IndexObat struct {
 	Kandungan  string `json:"kandungan"`
 	Link       string `json:"link"`
 }
+
+type Obat struct {
+	MerkDagang    string  `json:"merk"`
+	Kandungan     string  `json:"kandungan"`
+	LinkID        string  `json:"link"`
+	Keterangan    string  `json:"keterangan"`
+	SediaanObat   string  `json:"sediaan"`
+	MinDose       float64 `json:"mindose"`
+	MaxDose       float64 `json:"maxdose"`
+	Takaran       float64 `json:"takaran"`
+	JmlPerTakaran float64 `json:"jmlpertakaran"`
+	Submitter     string  `json:"submitter"`
+}

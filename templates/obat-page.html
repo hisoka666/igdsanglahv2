@@ -3,7 +3,7 @@
     <div class="w3-container w3-hide-small" id="obat-large-medium-div-add-button"><button class="w3-button w3-border w3-right w3-blue" style="width:20%" id="obat-add-button" onclick="buatObat()">Tambah Obat</button></div>
     <div class="w3-container w3-hide-large w3-hide-medium" id="obat-small-div-add-button"><button class="w3-button w3-border w3-right w3-blue" style="width:20%" id="obat-add-button" onclick="buatObat()"><i class="fa fa-plus"></i></button></div>
     <p></p>
-    <div class="w3-container w3-hide-small" id="obat-large-div-cari-obat"><input type="text" class="w3-input w3-border w3-left" id="obat-input-cari-obat" style="width:80%"><button class="w3-button w3-border w3-right w3-blue" style="width:20%">Cari Obat</button></div>
+    <div class="w3-container w3-hide-small" id="obat-large-div-cari-obat"><input type="text" class="w3-input w3-border w3-left" id="obat-input-cari-obat" style="width:80%" onkeyup="cariObatLive.call(this)"><button class="w3-button w3-border w3-right w3-blue" style="width:20%">Cari Obat</button></div>
     <div class="w3-container w3-hide-large w3-hide-medium" id="obat-div-cari-obat"><input type="text" class="w3-input w3-border w3-left" id="obat-input-cari-obat" style="width:80%" onkeyup="cariObatLive.call(this)"><button class="w3-button w3-border w3-right w3-blue" style="width:20%"><i class="fa fa-search"></i></button></div>
     <div class="w3-container" style="width:80%" id="obat-div-hasil"></div>
 </div>
@@ -11,11 +11,11 @@
 <div id="obat-add-obat" hidden>
     <div class="w3-container w3-hide-small" id="obat-back-simpan-large-medium">
         <button class="w3-button w3-border w3-teal w3-left" style="width:20%" id="obat-back-button-large-medium" onclick="viewObatMain()">Kembali</button>
-        <button class="w3-button w3-border w3-round w3-teal w3-right" style="width:20%" id="obat-simpan-button-large-medium" onclick="viewObatMain()">Simpan</button>
+        <button class="w3-button w3-border w3-round w3-teal w3-right" style="width:20%" id="obat-simpan-button-large-medium" onclick="simpanObat.call(this)">Simpan</button>
     </div>
     <div class="w3-container w3-hide-large w3-hide-medium" id="obat-back-simpan-small">
-        <button class="w3-button w3-border w3-teal w3-left" id="obat-back-button-small" onclick="viewObatMain()"><i class="fa fa-arrow-left"></i></button>
-        <button class="w3-button w3-border w3-teal w3-right" id="obat-simpan-button-small" onclick="viewObatMain()"><i class="fa fa-save"></i></button>
+        <button class="w3-button w3-border w3-teal w3-left" id="obat-back-button-small" onclick="viewObatMain.call(this)"><i class="fa fa-arrow-left"></i></button>
+        <button class="w3-button w3-border w3-teal w3-right" id="obat-simpan-button-small" onclick="simpanObat.call(this)"><i class="fa fa-save"></i></button>
     </div>
     <p></p>
     <div class="w3-container">
@@ -43,7 +43,8 @@
                     <input type="number" name="" id="min-dose" class="w3-round w3-border w3-input w3-left" style="width:45%" placeholder="Dosis Min">
                     <input type="number" name="" id="max-dose" class="w3-input w3-round w3-border w3-right" style="width:45%" placeholder="Dosis Max">
                     <p></p>
-                    <input type="text" name="" id="keterangan" class="w3-input w3-border w3-round" style="padding-top:10px" placeholder="Keterangan...">                    
+                    <input type="text" name="" id="keterangan" class="w3-input w3-border w3-round" style="padding-top:10px" placeholder="Keterangan...">
+                    <div class="w3-red" id="obat-warning"></div>
             </form>
     </div>
 </div>

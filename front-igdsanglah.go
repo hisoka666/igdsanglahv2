@@ -42,6 +42,8 @@ func init() {
 	http.HandleFunc("/ubah-detail-dokter", ubahDetailDokter)
 	http.HandleFunc("/get-obat-page", getObatPage)
 	http.HandleFunc("/cari-obat", cariObat)
+	http.HandleFunc("/tambah-obat", tambahObat)
+	http.HandleFunc("/get-obat", getObat)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
@@ -230,6 +232,31 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 		},
 		"htmltgl": func(tgl time.Time) string {
 			return tgl.Format("2006-01-02")
+		},
+		"sediaan": func(sed string) bool {
+			if sed == "2" || sed == "3" || sed == "4" || sed == "5" {
+				return true
+			} else {
+				return false
+			}
+		},
+		"ubahsediaan": func(sed string) string {
+			var m string
+			switch sed {
+			case "1":
+				m = "Tablet/Kapsul"
+			case "2":
+				m = "Sirup"
+			case "3":
+				m = "Drop"
+			case "4":
+				m = "Supositori"
+			case "5":
+				m = "Vial/Ampul"
+			case "6":
+				m = "Cream/Ointment"
+			}
+			return m
 		},
 	}
 	// Membuat template baru
