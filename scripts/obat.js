@@ -3,7 +3,7 @@ function openObatPage(){
 }
 
 function buatObat(){
-    console.log("buat obat")
+    // console.log("buat obat")
     // document.getElementById("obat-input-cari-obat-large").innerHTML = ""
     document.getElementById("obat-input-cari-obat").value = ""
     document.getElementById("obat-main-content").style.display = "none"
@@ -56,11 +56,12 @@ function simpanObat(){
         "data06": document.getElementById("min-dose").value,
         "data07": document.getElementById("max-dose").value,
         "data08": document.getElementById("keterangan").value,
-        "data09": document.getElementById("email").innerHTML
+        "data09": document.getElementById("email").innerHTML,
+        "data10": document.getElementById("link-obat-edit").innerHTML
     }
     // console.log(JSON.stringify(payload))
     if (payload.data01 == "" || payload.data02 == "" || payload.data03 == "0") {
-        console.log("this happend")
+        // console.log("this happend")
         // this.stopPropagation()
         document.getElementById("obat-warning").style.display = "block"
     } else {
@@ -80,15 +81,18 @@ function obatSuccess(){
 
 function viewSearch(){
     var payload = {
-        "data01": this.dataset.link
+        "data01": this.dataset.link,
+        "data02": this.innerHTML
     }
     sendPost("/get-isian-obat", JSON.stringify(payload), viewDataObat)
     // console.log(JSON.stringify(payload))
 }
 
 function viewDataObat(){
-    // var js = JSON.parse(document.getElementById("server-response"))
-    document.getElementById("obat-div-hasil").innerHTML = document.getElementById("server-response").innerHTML
+    var js = JSON.parse(document.getElementById("server-response").innerHTML)
+    document.getElementById("obat-div-hasil").innerHTML = js.script
+    // console.log(js.script)
+    document.getElementById("obat-input-cari-obat").value = js.modal
     // document.getElementById("berat-badan").style.display = "none"
 }
 
@@ -120,4 +124,28 @@ function submitDataObat() {
 
 function viewObatFinal(){
     document.getElementById("obat-div-hasil").innerHTML = document.getElementById("server-response").innerHTML
+}
+
+function editObat(){
+    var payload = {
+        "data01": this.dataset.link
+    }
+    sendPost("/edit-data-obat", JSON.stringify(payload), viewEditObat)
+    // console.log(JSON.stringify(payload))
+}
+
+function viewEditObat(){
+    var js = JSON.parse(document.getElementById("server-response").innerHTML)
+    // console.log(document.getElementById("server-response").innerHTML)
+    // console.log(JSON.stringify(js))
+    buatObat()
+    document.getElementById("nama-obat").value = js.data.merk
+    document.getElementById("kandungan-obat").value = js.data.kandungan
+    document.getElementById("sediaan-obat").selectedIndex = parseInt(js.data.sediaan)
+    document.getElementById("takaran-sediaan-obat").value = js.data.takaran
+    document.getElementById("kandungan-sediaan-obat").value = js.data.jmlpertakaran
+    document.getElementById("min-dose").value = js.data.mindose
+    document.getElementById("max-dose").value = js.data.maxdose
+    document.getElementById("keterangan").value = js.data.keterangan
+    document.getElementById("link-obat-edit").innerHTML = js.data.link
 }

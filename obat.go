@@ -9,6 +9,7 @@ import (
 	_ "golang.org/x/net/context"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/search"
 )
 
@@ -69,8 +70,15 @@ func tambahObat(w http.ResponseWriter, r *http.Request) {
 		MerkDagang: obat.MerkDagang,
 		Kandungan:  obat.Kandungan,
 	}
-
 	k := datastore.NewKey(ctx, "Obat", "", 0, datastore.NewKey(ctx, "IGD", "fasttrack", 0, nil))
+	if js.Data10 != "" {
+		g, err := datastore.DecodeKey(js.Data10)
+		if err != nil {
+			DocumentError(w, ctx, "mendecode key edit", err, 500)
+			return
+		}
+		k = g
+	}
 	ke, err := datastore.Put(ctx, k, obat)
 	if err != nil {
 		DocumentError(w, ctx, "menyimpan obat", err, 500)
@@ -110,7 +118,8 @@ func getIsianObat(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
-	fmt.Fprint(w, GenTemplate(w, ctx, js, "get-info-obat"))
+	SendBackSuccess(w, nil, GenTemplate(w, ctx, js, "get-info-obat"), js.Data2, "")
+	// fmt.Fprint(w, GenTemplate(w, ctx, js, "get-info-obat"))
 	// k, err := datastore.DecodeKey(js.Data1)
 	// if err != nil {
 	// 	DocumentError(w, ctx, "mendecode key", err, 500)
@@ -154,6 +163,30 @@ func getDataObat(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fin.Dewasa = true
 	}
-	w.WriteHeader(200)
+	// w.WriteHeader(200)
 	fmt.Fprint(w, GenTemplate(w, ctx, fin, "view-detail-obat"))
+}
+
+func editDataObat(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	js := &CatchDataJson{}
+	json.NewDecoder(r.Body).Decode(js)
+	defer r.Body.Close()
+	log.Infof(ctx, "Json encde : %v", js)
+	k, err := datastore.DecodeKey(js.Data1)
+	if err != nil {
+		DocumentError(w, ctx, "mendecode key", err, 500)
+		return
+	}
+	obt := &Obat{}
+	err = datastore.Get(ctx, k, obt)
+	if err != nil {
+		DocumentError(w, ctx, "mengambil data obat", err, 500)
+		return
+	}
+	obt.LinkID = k.Encode()
+	log.Infof(ctx, "Isi obat adalah: %v", obt)
+	// w.WriteHeader(200)
+	// json.NewEncoder(w).Encode(obt)
+	SendBackSuccess(w, obt, "", "", "")
 }

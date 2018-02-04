@@ -45,6 +45,7 @@ func init() {
 	http.HandleFunc("/tambah-obat", tambahObat)
 	http.HandleFunc("/get-isian-obat", getIsianObat)
 	http.HandleFunc("/get-data-obat", getDataObat)
+	http.HandleFunc("/edit-data-obat", editDataObat)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama

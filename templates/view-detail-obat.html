@@ -1,5 +1,5 @@
-
-<div>
+<p></p>
+<div class="w3-container w3-gray w3-round">
     <p>Nama Dagang : {{.Obat.MerkDagang}}</p>
     <p>Kandungan: {{.Obat.Kandungan}}</p>
     <p>Sediaan: {{ubahsediaan .Obat.SediaanObat}}
@@ -19,4 +19,9 @@
     <p>Saran Pemberian: {{.MinDoseFinal}}</p>
     <p>Keterangan: {{.Obat.Keterangan}}</p>
     {{end}}
+    <button class="w3-button w3-round w3-green w3-right" data-link="{{.Obat.LinkID}}" onclick="editObat.call(this)">Edit Obat</button>
+    <div class="w3-container">
+        <p></p>
+    </div>
+    
 </div>
