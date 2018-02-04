@@ -1,0 +1,20 @@
+<p></p>
+<div id="link-obat" hidden>{{.Data1}}</div>
+<select name="" id="pilih-dws-anak" class="w3-select w3-round w3-border" onchange="funcDewasaAnak.call(this)">
+    <option value="0" selected disabled>Dewasa atau anak-anak/bayi</option>
+    <option value="1">Dewasa</option>
+    <option value="2">Anak/Bayi</option>
+</select>
+<p></p>
+<!-- <div id="div-berat-badan" style="display:'none'"> -->
+    <input type="number" class="w3-input w3-border w3-round" id="berat-badan" placeholder="Berat badan" style="display:none">
+<!-- </div> -->
+<p></p>
+<div>
+    <div class="w3-panel w3-orange w3-round" id="obat-warning" hidden>
+        <p id="warning-msg" class="w3-left"></p>
+        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-right w3-orange">&times;</span>
+    </div>
+</div>
+<p></p>
+<button class="w3-round w3-border w3-button" onclick="submitDataObat()">Perlihatkan Obat</button>

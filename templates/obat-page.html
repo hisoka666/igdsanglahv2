@@ -20,31 +20,45 @@
     <p></p>
     <div class="w3-container">
             <form action="" id="form-add-obat">
-                    <input type="text" class="w3-input w3-border w3-round" id="nama-obat" placeholder="Masukkan nama obat...">
+                    <input type="text" class="w3-input w3-border w3-round" id="nama-obat" placeholder="Masukkan nama obat..." required>
                     <p></p>
-                    <input type="text" class="w3-input w3-border w3-round" id="kandungan-obat" placeholder="Masukkan kandungan obat..">
+                    <input type="text" class="w3-input w3-border w3-round" id="kandungan-obat" placeholder="Masukkan kandungan obat.." required>
                     <p></p>
-                    <select class="w3-select w3-border w3-round" id="sediaan-obat" onchange="optionSediaan.call(this)">
+                    <select class="w3-select w3-border w3-round" id="sediaan-obat" onchange="optionSediaan.call(this)" required>
                         <option value="0" selected disabled>Pilih sediaan...</option>
-                        <option value="1">Tablet/Kapsul</option>
+                        <option value="1">Tablet</option>
+                        <option value="7">Kapsul</option>
                         <option value="2">Sirup</option>
                         <option value="3">Drop</option>
                         <option value="4">Supositoria</option>
-                        <option value="5">Vial/Ampul</option>
+                        <option value="5">Vial</option>
+                        <option value="8">Ampul</option>
                         <option value="6">Cream/Ointment</option>
                     </select>
                     <p></p>
                     <div id="khusus-cairan" hidden>
-                            <input type="number" name="" class="w3-input w3-border w3-round" id="takaran-sediaan-obat" placeholder="Takaran per sediaan...">
+                            <input type="text" name="" class="w3-input w3-border w3-round" id="takaran-sediaan-obat" placeholder="Takaran per sediaan...">
                     </div>                    
                     <p></p>
-                    <input type="number" name="" id="kandungan-sediaan-obat" class="w3-input w3-border w3-round" placeholder="Kandungan per sediaan...">
+                    <input type="text" name="" id="kandungan-sediaan-obat" class="w3-input w3-border w3-round" placeholder="Kandungan per sediaan..." required>
                     <p></p>
-                    <input type="number" name="" id="min-dose" class="w3-round w3-border w3-input w3-left" style="width:45%" placeholder="Dosis Min">
-                    <input type="number" name="" id="max-dose" class="w3-input w3-round w3-border w3-right" style="width:45%" placeholder="Dosis Max">
-                    <p></p>
-                    <input type="text" name="" id="keterangan" class="w3-input w3-border w3-round" style="padding-top:10px" placeholder="Keterangan...">
-                    <div class="w3-red" id="obat-warning"></div>
+                    <div>
+                        <input type="number" name="" id="min-dose" class="w3-round w3-border w3-input w3-left" style="width:47%" placeholder="Dosis Min" required>
+                        <input type="number" name="" id="max-dose" class="w3-input w3-round w3-border w3-right" style="width:47%" placeholder="Dosis Max">
+                    </div> 
+                    <div class="w3-container">
+                        <p></p>
+                    </div>                   
+                    <div>
+                        <input type="text" name="" id="keterangan" class="w3-input w3-border w3-round" style="padding-top:10px" placeholder="Keterangan...">
+                    </div>
+                    
+                    <div>
+                        <div class="w3-panel w3-orange w3-round" id="obat-warning" hidden>
+                            <p id="warning-msg" class="w3-left">Form yang harus diisi belum lengkap</p>
+                            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-right w3-orange">&times;</span>
+                        </div>
+                    </div>
             </form>
     </div>
 </div>

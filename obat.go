@@ -60,9 +60,10 @@ func tambahObat(w http.ResponseWriter, r *http.Request) {
 		SediaanObat:   js.Data3,
 		MinDose:       ConvertStringtoFloat(js.Data6),
 		MaxDose:       ConvertStringtoFloat(js.Data7),
-		Takaran:       ConvertStringtoFloat(js.Data4),
-		JmlPerTakaran: ConvertStringtoFloat(js.Data5),
+		Takaran:       js.Data4,
+		JmlPerTakaran: js.Data5,
 		Submitter:     js.Data9,
+		TglEdit:       timeNowIndonesia().In(ZonaIndo()),
 	}
 	ind := &IndexObat{
 		MerkDagang: obat.MerkDagang,
@@ -102,7 +103,29 @@ func ConvertStringtoFloat(s string) float64 {
 	}
 }
 
-func getObat(w http.ResponseWriter, r *http.Request) {
+func getIsianObat(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	w.WriteHeader(200)
+
+	js := &CatchDataJson{}
+	json.NewDecoder(r.Body).Decode(js)
+	defer r.Body.Close()
+	fmt.Fprint(w, GenTemplate(w, ctx, js, "get-info-obat"))
+	// k, err := datastore.DecodeKey(js.Data1)
+	// if err != nil {
+	// 	DocumentError(w, ctx, "mendecode key", err, 500)
+	// 	return
+	// }
+	// obt := &Obat{}
+	// err = datastore.Get(ctx, k, obt)
+	// if err != nil {
+	// 	DocumentError(w, ctx, "mengambil data", err, 500)
+	// 	return
+	// }
+
+}
+
+func getDataObat(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
@@ -118,5 +141,19 @@ func getObat(w http.ResponseWriter, r *http.Request) {
 		DocumentError(w, ctx, "mengambil data", err, 500)
 		return
 	}
-
+	obt.LinkID = k.Encode()
+	fin := ObatFinal{}
+	fin.Obat = *obt
+	if js.Data2 == "2" && obt.MaxDose != 0 {
+		fin.MinDoseFinal = ConvertStringtoFloat(js.Data3) * obt.MinDose
+		fin.MaxDoseFinal = ConvertStringtoFloat(js.Data3) * obt.MaxDose
+		fin.Dewasa = false
+	} else if js.Data2 == "2" && obt.MaxDose == 0 {
+		fin.MinDoseFinal = ConvertStringtoFloat(js.Data3) * obt.MinDose
+		fin.Dewasa = false
+	} else {
+		fin.Dewasa = true
+	}
+	w.WriteHeader(200)
+	fmt.Fprint(w, GenTemplate(w, ctx, fin, "view-detail-obat"))
 }

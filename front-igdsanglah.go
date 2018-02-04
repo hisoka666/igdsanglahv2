@@ -43,7 +43,8 @@ func init() {
 	http.HandleFunc("/get-obat-page", getObatPage)
 	http.HandleFunc("/cari-obat", cariObat)
 	http.HandleFunc("/tambah-obat", tambahObat)
-	http.HandleFunc("/get-obat", getObat)
+	http.HandleFunc("/get-isian-obat", getIsianObat)
+	http.HandleFunc("/get-data-obat", getDataObat)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
@@ -70,7 +71,9 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 	if u.Email == "suryasedana@gmail.com" {
 		kur, err := getKursor(ctx, u.Email)
 		if err != nil {
+			// log.Infof(ctx, "Gagal mengambil kursor: %v", err)
 			DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
+			return
 		}
 		// Menyiapkan struct untuk diexecute di template untuk Home
 		me := FrontPage{
@@ -85,32 +88,33 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 		// Response server
 		fmt.Fprint(w, front)
 		return
-	}
-	// Mengecek apakah email adalah anggota dari Staff
-	staf, err := CekStaff(ctx, u.Email)
-	// log.Infof
-	if err != nil {
-		log.Errorf(ctx, "Email tidak terdaftar, %v", err)
-		// Jika bukan, secara otomatis user akan logout
-		fmt.Fprintf(w, `<p>Maaf email anda tidak terdaftar dalam sistem. Hubungi admin. </p><a href="%s">Logout</a>`, logout)
-		// http.Redirect(w, r, logout, 403)
 	} else {
-		kur, err := getKursor(ctx, staf.Email)
+		// Mengecek apakah email adalah anggota dari Staff
+		staf, err := CekStaff(ctx, u.Email)
+		// log.Infof
 		if err != nil {
-			DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
+			log.Errorf(ctx, "Email tidak terdaftar, %v", err)
+			// Jika bukan, secara otomatis user akan logout
+			fmt.Fprintf(w, `<p>Maaf email anda tidak terdaftar dalam sistem. Hubungi admin. </p><a href="%s">Logout</a>`, logout)
+			// http.Redirect(w, r, logout, 403)
+		} else {
+			kur, err := getKursor(ctx, staf.Email)
+			if err != nil {
+				DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
+			}
+			// Menyiapkan struct untuk diexecute di template untuk Home
+			me := FrontPage{
+				LogOut:   logout,
+				UserName: staf.NamaLengkap,
+				Email:    u.Email,
+				Kursor:   kur,
+				Peran:    staf.Peran,
+			}
+			// Menyiapkan script untuk Home
+			front := GenTemplate(w, ctx, me, "index", "front-content")
+			// Response server
+			fmt.Fprint(w, front)
 		}
-		// Menyiapkan struct untuk diexecute di template untuk Home
-		me := FrontPage{
-			LogOut:   logout,
-			UserName: staf.NamaLengkap,
-			Email:    u.Email,
-			Kursor:   kur,
-			Peran:    staf.Peran,
-		}
-		// Menyiapkan script untuk Home
-		front := GenTemplate(w, ctx, me, "index", "front-content")
-		// Response server
-		fmt.Fprint(w, front)
 	}
 }
 
@@ -244,7 +248,7 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 			var m string
 			switch sed {
 			case "1":
-				m = "Tablet/Kapsul"
+				m = "Tablet"
 			case "2":
 				m = "Sirup"
 			case "3":
@@ -252,9 +256,13 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 			case "4":
 				m = "Supositori"
 			case "5":
-				m = "Vial/Ampul"
+				m = "Vial"
 			case "6":
 				m = "Cream/Ointment"
+			case "7":
+				m = "Kapsul"
+			case "8":
+				m = "Ampul"
 			}
 			return m
 		},

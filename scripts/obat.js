@@ -15,6 +15,7 @@ function viewObatMain(){
     document.getElementById("obat-add-obat").style.display="none"
     document.getElementById("obat-main-content").style.display = "block"
     document.getElementById("form-add-obat").reset()
+    document.getElementById("obat-div-hasil").innerHTML = ""
 }
 
 function cariObatLive(){
@@ -61,7 +62,7 @@ function simpanObat(){
     if (payload.data01 == "" || payload.data02 == "" || payload.data03 == "0") {
         console.log("this happend")
         // this.stopPropagation()
-        document.getElementById("obat-warning").innerHTML = "Data tidak boleh kosong!"
+        document.getElementById("obat-warning").style.display = "block"
     } else {
         sendPost("/tambah-obat", JSON.stringify(payload), obatSuccess)
     }
@@ -81,10 +82,42 @@ function viewSearch(){
     var payload = {
         "data01": this.dataset.link
     }
-    sendPost("/get-data-obat", JSON.stringify(payload), viewDataObat)
+    sendPost("/get-isian-obat", JSON.stringify(payload), viewDataObat)
     // console.log(JSON.stringify(payload))
 }
 
 function viewDataObat(){
-    var js = documen.getElementById("server-response")
+    // var js = JSON.parse(document.getElementById("server-response"))
+    document.getElementById("obat-div-hasil").innerHTML = document.getElementById("server-response").innerHTML
+    // document.getElementById("berat-badan").style.display = "none"
+}
+
+function funcDewasaAnak(){
+    if (this.value == "2"){
+        document.getElementById("berat-badan").style.display = "block"
+    } else {
+        document.getElementById("berat-badan").style.display = "none"
+    }
+}
+
+function submitDataObat() {
+    var payload = {
+        "data01": document.getElementById("link-obat").innerHTML,
+        "data02": document.getElementById("pilih-dws-anak").value,
+        "data03": document.getElementById("berat-badan").value
+    }
+    if (payload.data02 == "0") {
+        document.getElementById("warning-msg").innerHTML = "Pilih dewasa atau anak-anak"
+        document.getElementById("obat-warning").style.display = "block"
+    } else if (payload.data02 == "2" && payload.data03 == "") {
+        document.getElementById("warning-msg").innerHTML = "Berat badan belum diisi"
+        document.getElementById("obat-warning").style.display = "block"
+    } else {
+        // console.log(JSON.stringify(payload))
+        sendPost("/get-data-obat", JSON.stringify(payload), viewObatFinal)
+    }
+}
+
+function viewObatFinal(){
+    document.getElementById("obat-div-hasil").innerHTML = document.getElementById("server-response").innerHTML
 }

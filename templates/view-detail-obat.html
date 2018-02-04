@@ -1,11 +1,22 @@
 
-<div style="display:none">
-    <p>Nama Dagang : {{.MerkDagang}}</p>
-    <p>Kandungan: {{.Kandungan}}</p>
-    <p>Sediaan: {{.SediaanObat}}, 
-    {{if .Takaran}}
-    Takaran standar (cth, ml) : {{.Takaran}}, 
+<div>
+    <p>Nama Dagang : {{.Obat.MerkDagang}}</p>
+    <p>Kandungan: {{.Obat.Kandungan}}</p>
+    <p>Sediaan: {{ubahsediaan .Obat.SediaanObat}}
+    {{if .Obat.Takaran}}
+    ({{.Obat.JmlPerTakaran}}/{{.Obat.Takaran}})
+    {{else}}
+    ({{.Obat.JmlPerTakaran}})</p>
     {{end}}
-    Pertakaran : {{.JmlPerTakaran}}</p>
-    <p>Saran Pemberian: <span id="obat-saran-pemberian"></span></p>
+    {{if .Dewasa}}
+    <p>Saran Pemberian: {{.Obat.Keterangan}}</p>
+    {{else if .MaxDoseFinal}}
+    <p>Dosis Per kg/BB/Pemberian : {{.Obat.MinDose}} - {{.Obat.MaxDose}}</p>
+    <p>Saran Pemberian: {{.MinDoseFinal}} - {{.MaxDoseFinal}}</p>
+    <p>Keterangan: {{.Obat.Keterangan}}</p>
+    {{else}}
+    <p>Dosis Per kg/BB/Pemberian : {{.Obat.MinDose}}</p>
+    <p>Saran Pemberian: {{.MinDoseFinal}}</p>
+    <p>Keterangan: {{.Obat.Keterangan}}</p>
+    {{end}}
 </div>
