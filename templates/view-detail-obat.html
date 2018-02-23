@@ -11,12 +11,12 @@
     {{if .Dewasa}}
     <p>Saran Pemberian: {{.Obat.Keterangan}}</p>
     {{else if .MaxDoseFinal}}
-    <p>Dosis Per kg/BB/Pemberian : {{.Obat.MinDose}} - {{.Obat.MaxDose}}</p>
-    <p>Saran Pemberian: {{.MinDoseFinal}} - {{.MaxDoseFinal}}</p>
+    <p>Dosis Per kg/BB/Pemberian : {{convertfloat .Obat.MinDose}} - {{convertfloat .Obat.MaxDose}}</p>
+    <p>Saran Pemberian: {{convertfloat .MinDoseFinal}} - {{convertfloat .MaxDoseFinal}}</p>
     <p>Keterangan: {{.Obat.Keterangan}}</p>
     {{else}}
-    <p>Dosis Per kg/BB/Pemberian : {{.Obat.MinDose}}</p>
-    <p>Saran Pemberian: {{.MinDoseFinal}}</p>
+    <p>Dosis Per kg/BB/Pemberian : {{convertfloat .Obat.MinDose}}</p>
+    <p>Saran Pemberian: {{convertfloat .MinDoseFinal}}</p>
     <p>Keterangan: {{.Obat.Keterangan}}</p>
     {{end}}
     <button class="w3-button w3-round w3-green w3-right" data-link="{{.Obat.LinkID}}" onclick="editObat.call(this)">Edit Obat</button>

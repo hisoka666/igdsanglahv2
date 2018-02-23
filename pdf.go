@@ -187,6 +187,17 @@ func CreateBCPPDF(c context.Context, pts []Pasien, iki []IKI, email string) (*by
 	pdf.MultiCell(50, 6, "Melakukan pelayanan medik umum (per pasien : pemeriksaan rawat jalan, IGD, visite rawat inap, tim medis diskusi", "1", "L", false)
 	pdf.SetXY(70, 116)
 	pdf.CellFormat(20, 24, "0,0032", "1", 0, "C", false, 0, "")
+	if len(iki) < 31 {
+		diff := 31 - len(iki)
+		for i := 0; i<diff ; i++ {
+			ik := IKI{
+				Tanggal: strconv.Itoa(diff-i) + pts[0].TglKunjungan.Format("/01/2006"),
+				IKI1: 0,
+				IKI2: 0,
+			}
+			iki = append(iki, ik)
+		}
+	}
 	for k, v := range iki {
 		if k >= 16 {
 			if v.IKI1 == 0 && v.IKI2 == 0 {

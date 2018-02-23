@@ -118,11 +118,12 @@ func getListPasien(c context.Context, kur, email, tgl string) ([]Pasien, error) 
 
 }
 func CountIKI(g context.Context, n []Pasien, tgl time.Time) (string, []IKI) {
-	wkt := time.Date(tgl.Year(), tgl.Month(), 1, 8, 0, 0, 0, ZonaIndo())
+	wkt := time.Date(tgl.Year(), tgl.Month(), 1, 7, 0, 0, 0, ZonaIndo())
 	jmlhari := wkt.AddDate(0, 1, -1).Day()
 	list := []IKI{}
 	for i := 0; i < jmlhari; i++ {
 		timeToCount := wkt.AddDate(0, 0, +i)
+		// timeAfter := time.Date(timeToCount.Year(), timeToCount.Month(), (timeToCount.Day() + 1), 12, 0, 0, 0, ZonaIndo())
 		timeAfter := timeToCount.AddDate(0, 0, 1)
 		// timeAfter := time.Date(timeToCount.Year(), timeToCount.Month(), (timeToCount.Day() + 1), 12, 0, 0, 0, ZonaIndo())
 		var a int
@@ -136,7 +137,7 @@ func CountIKI(g context.Context, n []Pasien, tgl time.Time) (string, []IKI) {
 			if v.TglKunjungan.Before(timeToCount) {
 				break
 			}
-			if v.NoCM == "00000000" || v.NoCM == "00000001" || v.NoCM == "00000002" {
+			if v.NoCM == "00000000" || v.NoCM == "00000001" || v.NoCM == "00000002" || v.NoCM == "00000003" {
 				continue
 			}
 			if v.IKI == "1" {
@@ -217,9 +218,12 @@ func convertToListPasien(c context.Context, kun []KunjunganPasien) ([]Pasien, er
 			TglAsli:      v.JamDatangRiil,
 			TglLahir:     n.TglLahir,
 		}
-		if v.ShiftJaga == "3" && v.JamDatang.Hour() > 5 && v.JamDatang.Hour() < 12 {
-			m.TglKunjungan = time.Date(v.JamDatang.Year(), v.JamDatang.Month(), v.JamDatang.Day(), 6, v.JamDatang.Minute(), v.JamDatang.Second(), v.JamDatang.Nanosecond(), ZonaIndo())
+		if m.ShiftJaga == "3" && m.TglKunjungan.Hour() > 5 && m.TglKunjungan.Hour() < 12 {
+			m.TglKunjungan = time.Date(v.JamDatang.In(ZonaIndo()).Year(), v.JamDatang.In(ZonaIndo()).Month(), v.JamDatang.In(ZonaIndo()).Day(), 6, v.JamDatang.In(ZonaIndo()).Minute(), v.JamDatang.In(ZonaIndo()).Second(), v.JamDatang.In(ZonaIndo()).Nanosecond(), ZonaIndo())
 		}
+		// if m.TglKunjungan.Day() == 5 {
+		// 	log.Infof(c, "Jam setelah modif adalah %v", m.TglKunjungan.Hour())
+		// }
 		list = append(list, m)
 	}
 	return list, nil

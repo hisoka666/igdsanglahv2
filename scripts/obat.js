@@ -8,6 +8,7 @@ function buatObat(){
     document.getElementById("obat-input-cari-obat").value = ""
     document.getElementById("obat-main-content").style.display = "none"
     document.getElementById("obat-add-obat").style.display = "block"
+    document.getElementById("link-obat-edit").innerHTML = ""
 }
 
 function viewObatMain(){
@@ -16,6 +17,7 @@ function viewObatMain(){
     document.getElementById("obat-main-content").style.display = "block"
     document.getElementById("form-add-obat").reset()
     document.getElementById("obat-div-hasil").innerHTML = ""
+    document.getElementById("link-obat-edit").innerHTML = ""
 }
 
 function cariObatLive(){
@@ -84,14 +86,16 @@ function viewSearch(){
         "data01": this.dataset.link,
         "data02": this.innerHTML
     }
-    sendPost("/get-isian-obat", JSON.stringify(payload), viewDataObat)
     // console.log(JSON.stringify(payload))
+    sendPost("/get-isian-obat", JSON.stringify(payload), viewDataObat)
+    
 }
 
 function viewDataObat(){
     var js = JSON.parse(document.getElementById("server-response").innerHTML)
     document.getElementById("obat-div-hasil").innerHTML = js.script
     // console.log(js.script)
+    // console.log("nama obat : " + js.modal)
     document.getElementById("obat-input-cari-obat").value = js.modal
     // document.getElementById("berat-badan").style.display = "none"
 }
@@ -110,6 +114,7 @@ function submitDataObat() {
         "data02": document.getElementById("pilih-dws-anak").value,
         "data03": document.getElementById("berat-badan").value
     }
+    // console.log(JSON.stringify(payload))
     if (payload.data02 == "0") {
         document.getElementById("warning-msg").innerHTML = "Pilih dewasa atau anak-anak"
         document.getElementById("obat-warning").style.display = "block"

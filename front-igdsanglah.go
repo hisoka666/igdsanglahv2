@@ -267,6 +267,9 @@ func GenTemplate(w http.ResponseWriter, c context.Context, n interface{}, temp .
 			}
 			return m
 		},
+		"convertfloat": func(dosis float64) string {
+			return fmt.Sprintf("%.4f", dosis)
+		},
 	}
 	// Membuat template baru
 	tmpl := template.New("")

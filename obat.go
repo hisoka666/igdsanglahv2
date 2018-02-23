@@ -9,7 +9,6 @@ import (
 	_ "golang.org/x/net/context"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
-	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/search"
 )
 
@@ -113,11 +112,12 @@ func ConvertStringtoFloat(s string) float64 {
 
 func getIsianObat(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
-	w.WriteHeader(200)
+	// w.WriteHeader(200)
 
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
+	// log.Infof(ctx, "Key adalah: %v", js)
 	SendBackSuccess(w, nil, GenTemplate(w, ctx, js, "get-info-obat"), js.Data2, "")
 	// fmt.Fprint(w, GenTemplate(w, ctx, js, "get-info-obat"))
 	// k, err := datastore.DecodeKey(js.Data1)
@@ -139,11 +139,13 @@ func getDataObat(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
+	// log.Infof(ctx, "Key adalah: %v", js.Data1)
 	k, err := datastore.DecodeKey(js.Data1)
 	if err != nil {
 		DocumentError(w, ctx, "mendecode key", err, 500)
 		return
 	}
+	// log.Infof(ctx, "Key decode adalah: %v", k)
 	obt := &Obat{}
 	err = datastore.Get(ctx, k, obt)
 	if err != nil {
@@ -172,7 +174,7 @@ func editDataObat(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
-	log.Infof(ctx, "Json encde : %v", js)
+	// log.Infof(ctx, "Json encde : %v", js)
 	k, err := datastore.DecodeKey(js.Data1)
 	if err != nil {
 		DocumentError(w, ctx, "mendecode key", err, 500)
@@ -185,7 +187,7 @@ func editDataObat(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	obt.LinkID = k.Encode()
-	log.Infof(ctx, "Isi obat adalah: %v", obt)
+	// log.Infof(ctx, "Isi obat adalah: %v", obt)
 	// w.WriteHeader(200)
 	// json.NewEncoder(w).Encode(obt)
 	SendBackSuccess(w, obt, "", "", "")
