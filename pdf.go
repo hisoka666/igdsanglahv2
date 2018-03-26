@@ -189,11 +189,11 @@ func CreateBCPPDF(c context.Context, pts []Pasien, iki []IKI, email string) (*by
 	pdf.CellFormat(20, 24, "0,0032", "1", 0, "C", false, 0, "")
 	if len(iki) < 31 {
 		diff := 31 - len(iki)
-		for i := 0; i<diff ; i++ {
+		for i := 0; i < diff; i++ {
 			ik := IKI{
 				Tanggal: strconv.Itoa(diff-i) + pts[0].TglKunjungan.Format("/01/2006"),
-				IKI1: 0,
-				IKI2: 0,
+				IKI1:    0,
+				IKI2:    0,
 			}
 			iki = append(iki, ik)
 		}
@@ -284,7 +284,7 @@ func CreateBCPPDF(c context.Context, pts []Pasien, iki []IKI, email string) (*by
 		}
 		// 11/02/1987
 		tang := v.TglKunjungan.Format("02-01-2006")
-		if v.TglKunjungan.Hour() > 0 && v.TglKunjungan.Hour() < 12 && v.ShiftJaga == "3" {
+		if v.TglKunjungan.Hour() >= 0 && v.TglKunjungan.Hour() < 12 && v.ShiftJaga == "3" {
 			tang = v.TglKunjungan.AddDate(0, 0, -1).Format("02-01-2006")
 		}
 		num := strconv.Itoa(k + 1)

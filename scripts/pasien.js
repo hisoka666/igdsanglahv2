@@ -113,7 +113,7 @@ function simpanDataBaruPasien(){
         "data04": document.getElementById("ubah-detail-jenis-kelamin").value,
         "data05": document.getElementById("detail-edit-button").dataset.link
     }
-    console.log(JSON.stringify(payload))
+    // console.log(JSON.stringify(payload))
     // document.getElementById("detail-edit-button").addEventListener("click", viewEditInput)
     sendPost("/ubah-detail-pasien", JSON.stringify(payload), refreshDetailPasien)
     

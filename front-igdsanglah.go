@@ -99,7 +99,8 @@ func indexPage(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintf(w, `<p>Maaf email anda tidak terdaftar dalam sistem. Hubungi admin. </p><a href="%s">Logout</a>`, logout)
 			// http.Redirect(w, r, logout, 403)
 		} else {
-			kur, err := getKursor(ctx, staf.Email)
+			kur, err := getKursor(ctx, u.Email)
+			// log.Infof(ctx, "Email adalah : %v", staf.Email)
 			if err != nil {
 				DocumentError(w, ctx, "Gagal mengambil kursor", err, 500)
 			}
@@ -396,6 +397,7 @@ func CekStaff(ctx context.Context, email string) (*Staff, error) {
 		doc.NamaLengkap = v.NamaLengkap
 		doc.LinkID = k[0].Encode()
 		doc.Peran = v.Peran
+		doc.Email = email
 	}
 	// var kunci *datastore.Key
 	// for _, n := range k {

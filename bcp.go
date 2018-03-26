@@ -165,6 +165,7 @@ func CountIKI(g context.Context, n []Pasien, tgl time.Time) (string, []IKI) {
 	return fmt.Sprintf("%.4f", total), list
 }
 func iterateList(c context.Context, q *datastore.Query, tgl time.Time) ([]KunjunganPasien, error) {
+	// log.Infof(c, "Tanggal akhir adalah: %v", tgl.Format("2006/01/02 15:04"))
 	m := []KunjunganPasien{}
 	t := q.Run(c)
 	for {
@@ -186,6 +187,7 @@ func iterateList(c context.Context, q *datastore.Query, tgl time.Time) ([]Kunjun
 		// d.JamDatang = d.JamDatang.In(ZonaIndo())
 		// d.JamDatang = jam
 		d.LinkID = k.Encode()
+		// log.Infof(c, "Kunjungan adalah: %v", d.JamDatang.Format("2006/01/02 15.04"))
 		m = append(m, *d)
 	}
 	return m, nil
@@ -224,6 +226,7 @@ func convertToListPasien(c context.Context, kun []KunjunganPasien) ([]Pasien, er
 		// if m.TglKunjungan.Day() == 5 {
 		// 	log.Infof(c, "Jam setelah modif adalah %v", m.TglKunjungan.Hour())
 		// }
+		// log.Infof(c, "Tgl Kunjungan adalah: %v", m.TglKunjungan.Format("2006/01/02 15:04"))
 		list = append(list, m)
 	}
 	return list, nil
