@@ -46,6 +46,8 @@ func init() {
 	http.HandleFunc("/get-isian-obat", getIsianObat)
 	http.HandleFunc("/get-data-obat", getDataObat)
 	http.HandleFunc("/edit-data-obat", editDataObat)
+	http.HandleFunc("/kegiatan-dokter", getKegiatanDokter)
+	http.HandleFunc("/tambah-kegiatan-dokter", addKegiatanDokter)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
@@ -322,7 +324,9 @@ func checkError(w http.ResponseWriter, c context.Context, topik string, err erro
 
 // SendBackSuccess digunakan untuk mengirim response ke Client. Data digunakan untuk mengirim
 // JSONArray sedangkan Script, ModalScript, ScriptTambahan masing-masing digunakan untuk
-// mengirim script utama, script untuk di modal, dan sript untuk tombol tambahan di modal
+// mengirim script utama, script untuk di modal, dan sript untuk tombol tambahan di modal.
+// Field Data sebaiknya berupa Struct yang bisa diubah ke bentuk JSON. Script, ModalScript,
+// dan ScriptTambahan adalah data dengan type String
 func SendBackSuccess(w http.ResponseWriter, dat interface{}, script, modal, tambahan string) {
 	w.WriteHeader(200)
 	res := &ResponseJson{

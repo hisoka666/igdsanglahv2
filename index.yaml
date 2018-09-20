@@ -10,6 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: KegiatanDokter
+  ancestor: yes
+  properties:
+  - name: TglTindakan
+    direction: desc
+
 - kind: KunjunganPasien
   properties:
   - name: Dokter

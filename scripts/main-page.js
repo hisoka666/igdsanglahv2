@@ -47,7 +47,9 @@ function createServConn (targetId){
 
     return xhttp
 }
-
+// content harus dalam bentuk json
+// somefund adalah fungsi yang akan dijalankan setelah 
+// ada feedback dari server yang bukan error
 function sendPost(url, content, somefunc){
     document.getElementById("loading-animation").style.display="block"
     var xhttp = new XMLHttpRequest()
@@ -120,3 +122,12 @@ function modifyModal(title, content01, content02, link, additionalBut){
 // window.addEventListener("DOMContentLoaded", function(){
 //     var myDatepicker = document.querySelector("input[]")
 // })
+
+// infoModal digunakan untuk menampilkan modal 
+// dengan tombol Tutup tanpa 
+// tombol tambahan
+function infoModal(title, info) {
+    document.getElementById("modal-info-title").innerHTML = title
+    document.getElementById("modal-info-content").innerHTML = info
+    document.getElementById("modal-info").style.display = "block"
+}

@@ -10,6 +10,9 @@ import (
 	"google.golang.org/appengine/search"
 )
 
+// Fungsi ini untuk mendapatkan info apakah pasien sudah pernah terdaftar
+// Jika belum terdaftar akan mengembalikan form isian untuk dilengkapi.
+// Jika sudah terdaftar akan menampilkan Nama Pasien dan Tanggal Lahir.
 func getInfoNoCM(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
 	js := &CatchDataJson{}
@@ -22,7 +25,9 @@ func getInfoNoCM(w http.ResponseWriter, r *http.Request) {
 	} else if k == nil {
 		SendBackSuccess(w, nil, GenTemplate(w, ctx, pts, "input-pts"), "", "")
 	} else {
-		SendBackSuccess(w, nil, GenTemplate(w, ctx, pts, "input-pts"), k.Encode(), "")
+		namaKapital := ProperCapital(pts.NamaPasien)
+		pts.NamaPasien = namaKapital
+		SendBackSuccess(w, pts, GenTemplate(w, ctx, pts, "input-pts"), k.Encode(), "")
 	}
 }
 func getDataPasienByLink(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +67,15 @@ func getPasienIDDanKunjunganFromLink(c context.Context, link string) (*IDDanKunj
 	}
 	return m, nil
 }
+
+// Fungsi ini menghasilkan struct DataPasien, *datastore.Key,
+// dan error.
+// Fungsi ini digunakan untuk mengecek dan mengambil database
+// pasien jika sudah terdaftar
+// Jika sudah terdaftar, data yang dikembalikan ke front end
+// termasuk datastore.Key.
+// datastore.Key ini kemudian bisa digunakan untuk menambahkan
+// data kunjungan pasien ke datastore field KunjunganPasien.
 func getDataByNoCM(c context.Context, nocm string) (*DataPasien, *datastore.Key, error) {
 	pts := &DataPasien{}
 	k := datastore.NewKey(c, "DataPasien", nocm, 0, datastore.NewKey(c, "IGD", "fasttrack", 0, nil))
@@ -73,7 +87,6 @@ func getDataByNoCM(c context.Context, nocm string) (*DataPasien, *datastore.Key,
 	} else {
 		return pts, k, nil
 	}
-	// checkError(w, c, "mengambil data pasien", err, 500)
 }
 
 func tambahDataKunjungan(w http.ResponseWriter, r *http.Request) {

@@ -1,5 +1,5 @@
 cron:
 - description: "create kursor"
   url: /createkursor
-  schedule: 1st day of month 12:00
+  schedule: 1st day of month 07:40
   timezone: Asia/Makassar

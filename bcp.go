@@ -95,15 +95,28 @@ func getListPasien(c context.Context, kur, email, tgl string) ([]Pasien, error) 
 			return nil, err
 		}
 		list = append(list, m...)
-	} else if tgl != "" && kur == "" {
-		now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
-		m, err := iterateList(c, q, now)
-		if err != nil {
-			return nil, err
-		}
-		list = append(list, m...)
+		// } else if tgl != "" && kur == "" {
+		// 	now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
+		// 	m, err := iterateList(c, q, now)
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
+		// 	list = append(list, m...)
+		// } else if time.Now().Day() == 1 && time.Now().Hour() < 9 {
+		// 	now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month()-1, 1, 8, 0, 0, 0, ZonaIndo())
+		// 	m, err := iterateList(c, q, now)
+		// 	if err != nil {
+		// 		return nil, err
+		// 	}
+		// 	list = append(list, m...)
 	} else {
-		now := time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
+		jani := timeNowIndonesia()
+		var now time.Time
+		if jani.Day() == 1 && jani.Hour() < 8 {
+			now = jani.AddDate(0, -1, 0)
+		} else {
+			now = time.Date(timeNowIndonesia().Year(), timeNowIndonesia().Month(), 1, 8, 0, 0, 0, ZonaIndo())
+		}
 		m, err := iterateList(c, q, now)
 		if err != nil {
 			return nil, err

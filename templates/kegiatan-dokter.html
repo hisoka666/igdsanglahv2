@@ -1,0 +1,63 @@
+<!-- <p>The quick brown fox jumps over the lazy dog</p> -->
+<div class="w3-center">
+    <p>Input Kegiatan Dokter</p>
+</div>
+<div class="w3-row w3-container w3-hide-large w3-hide-medium w3-center">
+    <div class="w3-col s9">
+        <input type="text" name="" id="get-no-cm-small" class="w3-input w3-border w3-round" placeholder="Ketik No.CM atau scan" onkeyup="sendNoCMForKegiatan()">
+    </div>
+    <div class="w3-col s3">
+        <input type="button" value="Barcode" id="barcode-btn" class="w3-button w3-round" onclick="startBarcodeScan()">
+        <!-- <a href="#" class="w3-button w3-right" id="barcode-btn"><i class="fa fa-barcode" aria-hidden="true"></i></a> -->
+    </div>
+    <div class="w3-center viewport" id="interactive">
+        <video src="" autoplay="true" preload="auto" muted="true" playsinline="true"></video>
+        <canvas #canvas class="drawingBuffer"></canvas>
+        <!-- <div id="scanner-container"></div> -->
+    </div> 
+</div>
+<div class="w3-container w3-hide-small">
+    <input type="text" name="" id="get-no-cm-large" class="w3-input w3-border w3-round" placeholder="Masukkan Nomor CM..." onkeyup="sendNoCMForKegiatan()">
+</div>
+<div class="w3-container w3-padding">
+    <div class="w3-panel w3-orange w3-round" id="warning-no-cm" hidden>
+        <p id="warning-msg" class="w3-left">Nomor CM kurang</p>
+        <span onclick="this.parentElement.style.display='none'" class="w3-button w3-right w3-orange">&times;</span>
+    </div>
+</div>
+<div class="w3-container" id="form-input-kegiatan" style="display:none">
+    <div class="w3-card">
+        <div class="w3-container w3-theme w3-center">
+            <h3>Tindakan Intervensi/Diagnostik Dokter</h3>
+        </div>
+        <div class="w3-container w3-center">
+            <h3>Nama Pasien</h3>
+            <h4 id="namaptskegiatan"></h4>
+        </div>
+        <input type="text" id="keynocm" hidden>
+        <div class="w3-container w3-padding-32">            
+                <label for="">Nama Tindakan Diagnostik/Intervensi</label>
+                <input type="text" name="" id="kegiatan-tindakan" class="w3-input w3-border w3-round">            
+        </div>
+        <div class="w3-container w3-theme w3-padding">
+            <button class="w3-btn w3-round-large w3-right w3-theme-d4" id="btn-tambah-kegiatan" onclick="tambahKegiatan()">Tambah</button>
+        </div>
+    </div>
+</div>
+
+<div class="w3-container">
+    <table class="w3-table w3-bordered">
+        <tr>
+            <th>Tanggal</th>
+            <th>Nama Pasien</th>
+            <th>Tindakan</th>
+        </tr>
+        {{range $m, $n := .}}
+        <tr>
+            <td>{{strtglhari $n.TglTindakan}}</td>
+            <td>{{propercaps $n.NamaPasien}}</td>
+            <td>{{$n.NamaTindakan}}</td>
+        </tr>
+        {{end}}
+    </table>
+</div>

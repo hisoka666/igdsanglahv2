@@ -1,7 +1,7 @@
 application: igdsanglah
 service: default
 runtime: go
-api_version: go1
+api_version: go1.9
 
 handlers:
 - url: /stylesheets

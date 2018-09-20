@@ -161,3 +161,11 @@ type ObatFinal struct {
 	MaxDoseFinal float64 `json:"maxdosefinal"`
 	MinDoseFinal float64 `json:"mindosefinal"`
 }
+
+type KegiatanDokter struct {
+	IDPasien        string    `json:"idpts"`
+	NamaTindakan    string    `json:"tindakan"`
+	NamaPasien      string    `json:"namapts"`
+	TglTindakan     time.Time `json:"tgltindakan"`
+	KeyDataTindakan string    `json:"keytindakan"`
+}

@@ -87,8 +87,6 @@ func CreateEndKursor(c context.Context, par *datastore.Key, email string) {
 	t := q.Run(c)
 	kur := Kursor{}
 	kun := KunjunganPasien{}
-	// days := time.Date(yr,time.Month(mo),0,0,0,0,0,zone).Day()
-	// mon := time.Date()
 	tgl := timeNowIndonesia().AddDate(0, -1, 0).Format("2006/01")
 	tglnow := timeNowIndonesia().Format("2006/01")
 	tglend, err := time.ParseInLocation("2006/01/02 15:04", tglnow+"/01 07:30", ZonaIndo())
@@ -96,13 +94,7 @@ func CreateEndKursor(c context.Context, par *datastore.Key, email string) {
 		log.Errorf(c, "Gagal memparse tglend : %v", err)
 		return
 	}
-	// zone, _ := time.LoadLocation("Asia/Makassar")
-	// todayIs := time.Now().In(zone)
-	// hariini := time.Date(todayIs.Year(), todayIs.Month(), 1, 0, 0, 0, 0, zone)
-	// tgl := hariini.AddDate(0, -1, 0).Format("2006/01")
 	k := datastore.NewKey(c, "Kursor", tgl, 0, par)
-	// _, kurKey := DatastoreKey(c, "Dokter", email, "Kursor", tgl)
-	// log.Infof(c, "Waktu lokal adalah: %v", hariini)
 	for {
 		_, err := t.Next(&kun)
 		if err == datastore.Done {
@@ -111,27 +103,15 @@ func CreateEndKursor(c context.Context, par *datastore.Key, email string) {
 		if err != nil {
 			log.Errorf(c, "Gagal membaca data %v", err)
 		}
-		log.Infof(c, "jam Dtang adalah: %v shift jaga adalah: %v", kun.JamDatang.In(ZonaIndo()), kun.ShiftJaga)
-		log.Infof(c, "Tgl end adalah: %v", tglend)
 		if IsThisCursor(kun.JamDatang.In(ZonaIndo()), tglend, kun.ShiftJaga) {
 			cursor, _ := t.Cursor()
 			kur.Point = cursor.String()
 			if _, err := datastore.Put(c, k, &kur); err != nil {
 				log.Errorf(c, "gagal menyimpan kursor : %v", err)
 			}
+			log.Infof(c, "Created Kursor for %v", email)
 			break
 		}
-		// jamEdit := AdjustTime(kun.JamDatang, kun.ShiftJaga)
-		// log.Infof(c, "Jamedit adalah: %v", jamEdit)
-		// log.Infof(c, "Apakah hari ini sebelum tanggal 1? %v", jamEdit.Before(hariini))
-		// if jamEdit.Before(hariini) == true {
-		// 	cursor, _ := t.Cursor()
-		// 	kur.Point = cursor.String()
-		// 	if _, err := datastore.Put(c, kurKey, &kur); err != nil {
-		// 		LogError(c, err)
-		// 	}
-		// 	break
-		// }
 	}
 }
 
