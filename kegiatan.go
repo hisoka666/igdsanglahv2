@@ -23,6 +23,7 @@ func getKegiatanDokter(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	keg, err := getKegiatanBulanan(ctx, js.Data1, tgl)
+	log.Infof(ctx, "Data list adalah: %v", keg)
 	if err != nil {
 		DocumentError(w, ctx, "Gagal mengambil daftar kegiatan", err, 500)
 		return
@@ -42,7 +43,7 @@ func getKegiatanBulanan(ctx context.Context, email string, tgl string) ([]Kegiat
 	if err != nil {
 		return nil, err
 	}
-	q := datastore.NewQuery("KegiatanDokter").Ancestor(par).Order("-TglTindakan")
+	q := datastore.NewQuery("KegiatanDokter").Ancestor(par).Filter("TglTindakan >=", bln.In(ZonaIndo())).Filter("TglTindakan <", bln.In(ZonaIndo()).AddDate(0, 1, 0)).Filter("Hide =", false).Order("-TglTindakan")
 	t := q.Run(ctx)
 	keg := []KegiatanDokter{}
 	for {
@@ -51,12 +52,12 @@ func getKegiatanBulanan(ctx context.Context, email string, tgl string) ([]Kegiat
 		if err == datastore.Done {
 			break
 		}
-		if k.TglTindakan.After(bln.AddDate(0, 1, 0)) == true {
-			continue
-		}
-		if k.TglTindakan.Before(bln) == true {
-			break
-		}
+		// if k.TglTindakan.After(bln.AddDate(0, 1, 0)) == true {
+		// 	continue
+		// }
+		// if k.TglTindakan.Before(bln) == true {
+		// 	break
+		// }
 		if err != nil {
 			return nil, err
 		}
@@ -74,7 +75,7 @@ func addKegiatanDokter(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
-	log.Infof(ctx, "email adalah %s", js.Data3)
+	// log.Infof(ctx, "email adalah %s", js.Data3)
 	k, err := getDocKey(ctx, js.Data3)
 	if err != nil {
 		DocumentError(w, ctx, "mengambil key dokter", err, 500)
@@ -85,8 +86,9 @@ func addKegiatanDokter(w http.ResponseWriter, r *http.Request) {
 		NamaTindakan: js.Data2,
 		NamaPasien:   js.Data4,
 		TglTindakan:  timeNowIndonesia(),
+		Hide:         false,
 	}
-	log.Infof(ctx, "Nama Tindakan adalah %s", keg.NamaTindakan)
+	// log.Infof(ctx, "Nama Tindakan adalah %s", keg.NamaTindakan)
 	_, err = datastore.Put(ctx, datastore.NewKey(ctx, "KegiatanDokter", "", 0, k), keg)
 	if err != nil {
 		DocumentError(w, ctx, "Gagal menyimpan data kegiatan", err, 500)
@@ -105,47 +107,40 @@ func hapusKegiatanDokter(w http.ResponseWriter, r *http.Request) {
 	js := &CatchDataJson{}
 	json.NewDecoder(r.Body).Decode(js)
 	defer r.Body.Close()
-	log.Infof(ctx, "key adalah: %s", js.Data1)
-	k, err := datastore.DecodeKey(js.Data1)
+	// log.Infof(ctx, "key adalah: %s", js.Data1)
+	kun, keg, err := getKegiatanByKey(ctx, js.Data1)
 	if err != nil {
-		DocumentError(w, ctx, "Gagal mengambil key", err, 500)
+		DocumentError(w, ctx, "Gagal mengambil data", err, 500)
 		return
-	} else {
-		err = datastore.Delete(ctx, k)
-		if err != nil {
-			DocumentError(w, ctx, "Gagal menghapus entri", err, 500)
-			return
-		}
-		kd, err := getKegiatanBulanan(ctx, js.Data3, timeNowIndonesia().Format("2006/01"))
-		if err != nil {
-			DocumentError(w, ctx, "Gagal mengambil data kegiatan", err, 500)
-			return
-		}
-		SendBackSuccess(w, nil, GenTemplate(w, ctx, kd, "kegiatan-dokter"), "Berhasil menghapus kegiatan", "")
 	}
+	keg.Hide = true
+	_, err = datastore.Put(ctx, kun, &keg)
+	if err != nil {
+		DocumentError(w, ctx, "Gagal menghapus data", err, 500)
+		return
+	}
+	kd, err := getKegiatanBulanan(ctx, js.Data3, timeNowIndonesia().Format("2006/01"))
+	if err != nil {
+		DocumentError(w, ctx, "Gagal mengambil data kegiatan", err, 500)
+		return
+	}
+	SendBackSuccess(w, nil, GenTemplate(w, ctx, kd, "kegiatan-dokter"), "Berhasil menghapus kegiatan", "")
+	// log.Infof(ctx, "Data adalah: %v", keg)
+
 }
 
-func getKegiatanByKey(ctx context.Context, kun string) (KegiatanDokter, error) {
+func getKegiatanByKey(ctx context.Context, kun string) (*datastore.Key, KegiatanDokter, error) {
 	k, err := datastore.DecodeKey(kun)
 	var ke KegiatanDokter
 	if err != nil {
-		return ke, err
+		return nil, ke, err
 	}
-	q := datastore.NewQuery("KegiatanDokter").Filter("__key__", k)
-	t := q.Run(ctx)
-	keg := []KegiatanDokter{}
-	for {
-		ku, err := t.Next(&ke)
-		if err == datastore.ErrNoSuchEntity {
-			return ke, err
-		}
-		if err == datastore.Done {
-			break
-		}
-		ke.KeyDataTindakan = ku.Encode()
-		keg = append(keg, ke)
+	err = datastore.Get(ctx, k, &ke)
+	if err != nil {
+		return nil, ke, err
 	}
-	return keg[0], nil
+	ke.KeyDataTindakan = k.Encode()
+	return k, ke, nil
 }
 
 func getContentKegiatanBulanan(w http.ResponseWriter, r *http.Request) {

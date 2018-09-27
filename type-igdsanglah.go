@@ -168,4 +168,5 @@ type KegiatanDokter struct {
 	NamaPasien      string    `json:"namapts"`
 	TglTindakan     time.Time `json:"tgltindakan"`
 	KeyDataTindakan string    `json:"keytindakan"`
+	Hide            bool      `json:"hide"`
 }

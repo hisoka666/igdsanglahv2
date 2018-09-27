@@ -13,6 +13,13 @@ indexes:
 - kind: KegiatanDokter
   ancestor: yes
   properties:
+  - name: Hide
+  - name: TglTindakan
+    direction: desc
+
+- kind: KegiatanDokter
+  ancestor: yes
+  properties:
   - name: TglTindakan
     direction: desc
 

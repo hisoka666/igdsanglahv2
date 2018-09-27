@@ -65,8 +65,9 @@ function viewResponseKegiatan(){
 }
 
 function hapusKegiatan(){
+    console.log(this.dataset.link)
     var payload = {
-        "data01" : document.getElementById("kegiatan-hapus").dataset.link,
+        "data01" : this.dataset.link,
         "data03" : document.getElementById("email").innerHTML
     }
 
