@@ -57,6 +57,7 @@ function startScanner() {
         }
         // alert("hasil adalah: " + result.codeResult.code)
         sendPost("/get-info-nocm", JSON.stringify(payload), showNoCMInfo)
+        sendPost("/get-info-nocm", JSON.stringify(payload), showNoCMInfoForKegiatan)
         document.getElementById("interactive").style.display = "none"
         _scannerIsRunning = false;
         Quagga.stop()

@@ -63,3 +63,21 @@ function viewResponseKegiatan(){
     document.getElementById("main-content").innerHTML = js.script
     infoModal("Berhasil", js.modal)
 }
+
+function hapusKegiatan(){
+    var payload = {
+        "data01" : document.getElementById("kegiatan-hapus").dataset.link,
+        "data03" : document.getElementById("email").innerHTML
+    }
+
+    sendPost("/hapus-kegiatan", JSON.stringify(payload), viewResponseKegiatan)
+}
+
+function cariKegiatanBulan(){
+    // alert(document.getElementById("kegiatan-bulan").value)
+    var payload = {
+        "data01" : document.getElementById("kegiatan-bulan").value,
+        "data03" : document.getElementById("email").innerHTML
+    }
+    sendPost("/get-kegiatan-bulanan", JSON.stringify(payload), viewResponseKegiatan)
+}

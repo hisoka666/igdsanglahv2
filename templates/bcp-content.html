@@ -41,7 +41,7 @@
                 <div class="w3-col s12 w3-padding w3-theme-l3">
                         <p>Datang ke UGD: {{strtglhari $n.TglKunjungan}}</p>
                         <p>Diagnosis: {{propercaps $n.Diagnosis}}</p>
-                        <p>ATS: {{$n.ATS}} IKI: {{$n.IKI}}</p>
+                        <p>ATS: {{$n.ATS}} IKI: {{$n.IKI}} ({{convstrjaga $n.ShiftJaga}})</p>
                         <select name="" id="modify-data-kunjungan" data-link="{{$n.LinkID}}" class="w3-select w3-round w3-border" onchange="modifyEntri.call(this)">
                             <option value="0" selected disabled>Pilih salah satu...</option>
                             <option value="1">Edit data</option>

@@ -44,19 +44,23 @@
         </div>
     </div>
 </div>
-
+<div class="w3-container">
+    Daftar kegiatan bulan: <input type="month" name="" id="kegiatan-bulan"> <button class="w3-button w3-rounder" id="cari-kegiatan-bulan" onclick="cariKegiatanBulan()"><i class="fa fa-search"></i></button>
+</div>
 <div class="w3-container">
     <table class="w3-table w3-bordered">
         <tr>
             <th>Tanggal</th>
             <th>Nama Pasien</th>
             <th>Tindakan</th>
+            <th></th>
         </tr>
         {{range $m, $n := .}}
         <tr>
             <td>{{strtglhari $n.TglTindakan}}</td>
             <td>{{propercaps $n.NamaPasien}}</td>
             <td>{{$n.NamaTindakan}}</td>
+            <td><button class="w3-button w3-right w3-round w3-teal" data-link={{$n.KeyDataTindakan}} id="kegiatan-hapus" onclick="hapusKegiatan()"><i class="fa fa-trash"></i></button></td>
         </tr>
         {{end}}
     </table>

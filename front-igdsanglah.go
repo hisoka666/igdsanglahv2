@@ -48,6 +48,8 @@ func init() {
 	http.HandleFunc("/edit-data-obat", editDataObat)
 	http.HandleFunc("/kegiatan-dokter", getKegiatanDokter)
 	http.HandleFunc("/tambah-kegiatan-dokter", addKegiatanDokter)
+	http.HandleFunc("/hapus-kegiatan", hapusKegiatanDokter)
+	http.HandleFunc("/get-kegiatan-bulanan", getContentKegiatanBulanan)
 }
 
 // homePage digunakan untuk menampilkan template halaman utama
